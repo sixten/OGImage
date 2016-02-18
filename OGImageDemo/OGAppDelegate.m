@@ -8,44 +8,25 @@
 
 #import "OGAppDelegate.h"
 #import "OGViewController.h"
-#import "DDLog.h"
-#import "DDTTYLogger.h"
 #import "OGImageCache.h"
 
 @implementation OGAppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(__unused UIApplication *)application didFinishLaunchingWithOptions:(__unused NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.viewController = [[OGViewController alloc] initWithNibName:@"OGViewController" bundle:nil];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     self.window.rootViewController = navController;
     [self.window makeKeyAndVisible];
-    [self setupLogging];
     return YES;
 }
 
-- (void)setupLogging {
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
-}
-
-- (void)applicationWillResignActive:(UIApplication *)application {
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
+- (void)applicationDidEnterBackground:(__unused UIApplication *)application {
     // purge the disk cache of any image that hasn't been
     // accessed more recently than 2 minutes ago. This is obviously pretty contrived;
     NSDate *before = [NSDate dateWithTimeIntervalSinceNow:-120.];
     [[OGImageCache shared] purgeDiskCacheOfImagesLastAccessedBefore:before];
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
 }
 
 @end
