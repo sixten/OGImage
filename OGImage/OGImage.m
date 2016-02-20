@@ -46,14 +46,14 @@
 
 #pragma mark - OGImageLoaderDelegate
 
-- (void)imageLoader:(OGImageLoader*)loader didLoadImage:(__OGImage *)image forURL:(NSURL *)url {
+- (void)imageLoader:(__unused OGImageLoader*)loader didLoadImage:(__OGImage *)image forURL:(NSURL *)url {
     NSParameterAssert([self.url isEqual:url]);
     if (nil != image) {
         [self imageDidLoadFromURL:image];
     }
 }
 
-- (void)imageLoader:(OGImageLoader*)loader failedForURL:(NSURL *)url error:(NSError *)error {
+- (void)imageLoader:(__unused OGImageLoader*)loader failedForURL:(NSURL *)url error:(NSError *)error {
     NSParameterAssert([self.url isEqual:url]);
     if (nil != error) {
         [self _setError:error];

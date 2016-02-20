@@ -34,12 +34,12 @@
         NSData *jsonData = [NSData dataWithContentsOfURL:jsonURL];
         NSAssert(nil != jsonData, @"Couldn't load json resource data");
         NSError *error;
-        NSArray *tmpArray = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+        NSArray *tmpArray = [NSJSONSerialization JSONObjectWithData:jsonData options:(NSJSONReadingOptions)0 error:&error];
         if (nil == tmpArray) {
             NSAssert(NO, @"Couldn't parse json resource: %@", error);
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            _urls = tmpArray;
+            self->_urls = tmpArray;
             [self.tableView reloadData];
         });
     });

@@ -45,7 +45,7 @@
   [[UIColor colorWithRed:r green:g blue:b alpha:0.5f] setFill];
   UIRectFill(bounds);
   
-  [@"Lorem ipsum dolor sit amet" drawInRect:bounds withFont:[UIFont systemFontOfSize:15]];
+  [@"Lorem ipsum dolor sit amet" drawInRect:bounds withAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]}];
   
   UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
   UIGraphicsEndImageContext();

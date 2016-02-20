@@ -157,7 +157,7 @@ static OGImageLoader * OGImageLoaderInstance;
         // serialize access to the request LIFO 'queue'
 
         // check to see if there's already an in-flight request for this url
-        NSMutableArray *lsnrs = [_loaderDelegates valueForKey:[imageURL absoluteString]];
+        NSMutableArray *lsnrs = [self->_loaderDelegates valueForKey:[imageURL absoluteString]];
         if (nil != lsnrs) {
             // we already have a request out for this url, so just add the
             // loader delegate
@@ -167,20 +167,20 @@ static OGImageLoader * OGImageLoaderInstance;
 
         // we don't have a request out for this url, so create it...
         OGImageRequest *request = [[OGImageRequest alloc] initWithURL:imageURL
-                                                      completionBlock:^(__OGImage *image, NSError *error, double timeElapsed){
-            if (_inFlightRequestCount > 0) {
-                _inFlightRequestCount--;
+                                                      completionBlock:^(__OGImage *image, NSError *error, __unused double timeElapsed){
+            if (self->_inFlightRequestCount > 0) {
+                self->_inFlightRequestCount--;
             }
             // when the request is complete, notify all interested delegates
-            __block NSMutableArray *lsnrs = nil;
-            dispatch_sync(_requestsSerializationQueue, ^{
+            __block NSMutableArray *listeners = nil;
+            dispatch_sync(self->_requestsSerializationQueue, ^{
                 // we need to ensure serial access to the delegate array
-                lsnrs = _loaderDelegates[[imageURL absoluteString]];
-                [_loaderDelegates removeObjectForKey:[imageURL absoluteString]];
+                listeners = self->_loaderDelegates[[imageURL absoluteString]];
+                [self->_loaderDelegates removeObjectForKey:[imageURL absoluteString]];
             });
             dispatch_async(dispatch_get_main_queue(), ^{
                 // call back all the delegates on the main queue
-                for (id<OGImageLoaderDelegate> loaderDelegate in lsnrs) {
+                for (id<OGImageLoaderDelegate> loaderDelegate in listeners) {
                     if (nil == image) {
                         [loaderDelegate imageLoader:self failedForURL:imageURL error:error];
                     } else {
@@ -188,13 +188,13 @@ static OGImageLoader * OGImageLoaderInstance;
                     }
                 }
             });
-        } queue:_imageCompletionQueue];
-        [_requests addObject:request];
+        } queue:self->_imageCompletionQueue];
+        [self->_requests addObject:request];
 
         // ... and add the delegate to _loaderDelegates
         lsnrs = [NSMutableArray arrayWithCapacity:3];
         [lsnrs addObject:delegate];
-        _loaderDelegates[[imageURL absoluteString]] = lsnrs;
+        self->_loaderDelegates[[imageURL absoluteString]] = lsnrs;
     });
 }
 

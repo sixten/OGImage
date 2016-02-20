@@ -7,6 +7,7 @@
 
 #import "OGScaledImage.h"
 #import "OGImageCache.h"
+#import "__OGImage.h"
 
 NSString *OGKeyWithSize(NSString *origKey, CGSize size, CGFloat cornerRadius, OGImageProcessingScaleMethod method) {
     return [NSString stringWithFormat:@"%@-%f-%f-%f-%ld", origKey, size.width, size.height, cornerRadius, (long)method];
@@ -104,12 +105,12 @@ NSString *OGKeyWithSize(NSString *origKey, CGSize size, CGFloat cornerRadius, OG
 
 #pragma mark - OGImageProcessingDelegate
 
-- (void)imageProcessing:(OGImageProcessing *)processing didProcessImage:(__OGImage *)image {
+- (void)imageProcessing:(__unused OGImageProcessing *)processing didProcessImage:(__OGImage *)image {
     self.scaledImage = image;
     [[OGImageCache shared] setImage:image forKey:_scaledKey];
 }
 
-- (void)imageProcessingFailed:(OGImageProcessing *)processing error:(NSError *)error {
+- (void)imageProcessingFailed:(__unused OGImageProcessing *)processing error:(NSError *)error {
     self.error = error;
 }
 

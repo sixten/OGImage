@@ -39,27 +39,27 @@
 
 #pragma mark - NSURLConnectionDelegate
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+- (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
     self.error = error;
     dispatch_async(dispatch_get_main_queue(), ^{
-        _completionBlock(nil, self.error, 0.);
+        self->_completionBlock(nil, self.error, 0.);
     });
 }
 
 #pragma mark - NSURLConnectionDataDelegate
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+- (void)connection:(__unused NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     _httpResponse = (NSHTTPURLResponse *)response;
     _contentLength = [_httpResponse.allHeaderFields[@"Content-Length"] intValue];
     _data = [NSMutableData dataWithCapacity:_contentLength];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+- (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
     [_data appendData:data];
     self.progress = (float)_data.length / (float)_contentLength;
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
     [self prepareImageAndNotify];
 }
 
@@ -80,7 +80,7 @@
     }
     NSAssert((nil == tmpImage && nil != tmpError) || (nil != tmpImage && nil == tmpError), @"One of tmpImage or tmpError should be non-nil");
     dispatch_async(dispatch_get_main_queue(), ^{
-        _completionBlock(tmpImage, tmpError, -[_startTime timeIntervalSinceNow]);
+        self->_completionBlock(tmpImage, tmpError, -[self->_startTime timeIntervalSinceNow]);
     });
 }
 

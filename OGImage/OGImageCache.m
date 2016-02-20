@@ -91,16 +91,16 @@ NSURL *OGImageCacheURL() {
     dispatch_async(_cacheFileReadQueue, ^{
         // Check to see if the image is cached locally
         NSURL *cacheURL = [OGImageCache fileURLForKey:(key)];
-        __OGImage *image = [[__OGImage alloc] initWithDataAtURL:cacheURL];
+        __OGImage *storedImage = [[__OGImage alloc] initWithDataAtURL:cacheURL];
         // if we have the image in the on-disk cache, store it to the in-memory cache
-        if (nil != image) {
-            [_memoryCache setObject:image forKey:key];
+        if (nil != storedImage) {
+            [self->_memoryCache setObject:storedImage forKey:key];
         }
         // calls the block with the image if it was cached or nil if it wasn't
         dispatch_async(dispatch_get_main_queue(), ^{
-            block(image);
+            block(storedImage);
         });
-        dispatch_resume(_cacheFileTasksQueue);
+        dispatch_resume(self->_cacheFileTasksQueue);
     });
 }
 
@@ -133,7 +133,7 @@ NSURL *OGImageCacheURL() {
         [[UIApplication sharedApplication] endBackgroundTask:taskId];
     }];
     void (^purgeFilesBlock)(void) = ^{
-        for (NSURL *url in [[NSFileManager defaultManager] enumeratorAtURL:OGImageCacheURL() includingPropertiesForKeys:nil options:0 errorHandler:nil]) {
+        for (NSURL *url in [[NSFileManager defaultManager] enumeratorAtURL:OGImageCacheURL() includingPropertiesForKeys:nil options:(NSDirectoryEnumerationOptions)0 errorHandler:nil]) {
             [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
         }
         [[UIApplication sharedApplication] endBackgroundTask:taskId];
@@ -163,7 +163,7 @@ NSURL *OGImageCacheURL() {
     }
 }
 
-- (void)purgeMemoryCacheForKey:(NSString *)key andWait:(BOOL)wait {
+- (void)purgeMemoryCacheForKey:(NSString *)key andWait:(__unused BOOL)wait {
     NSParameterAssert(nil != key);
 
     [_memoryCache removeObjectForKey:key];
