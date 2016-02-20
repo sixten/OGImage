@@ -7,11 +7,14 @@
 //
 
 @import XCTest;
+@import Accelerate;
 @import OGImage;
 #import "OGTestImageObserver.h"
 
 extern CGSize OGAspectFit(CGSize from, CGSize to);
 extern CGSize OGAspectFill(CGSize from, CGSize to, CGPoint *offset);
+
+extern OSStatus UIImageToVImageBuffer(UIImage *image, vImage_Buffer *buffer, CGImageAlphaInfo alphaInfo);
 
 static NSString * const TEST_IMAGE_URL_STRING = @"http://easyquestion.net/thinkagain/wp-content/uploads/2009/05/james-bond.jpg";
 static const CGSize TEST_IMAGE_SIZE = {317.f, 400.f};
@@ -61,6 +64,36 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
   CGSize newSize = OGAspectFill(CGSizeMake(1920.f, 1024.f), CGSizeMake(256.f, 256.f), &pt);
   XCTAssertTrue(CGSizeEqualToSize(newSize, CGSizeMake(480.f, 256.f)), @"Expected 480, 256");
   XCTAssertTrue(pt.x == 112.f && pt.y == 0.f, @"Expected offset point at 112, 0");
+}
+
+- (void)testRightOrientedImageGetsRotated
+{
+  NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"westside" ofType:@"jpg"];
+  UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
+  XCTAssertTrue(CGSizeEqualToSize(CGSizeMake(200.f, 50.f), image.size), @"Image should be 200x50 px.");
+  XCTAssertEqual(UIImageOrientationRight, image.imageOrientation, @"Image should be right-oriented.");
+  
+  vImage_Buffer vBuffer;
+  OSStatus result = UIImageToVImageBuffer(image, &vBuffer, kCGImageAlphaNoneSkipLast);
+  XCTAssertEqual(noErr, result, @"Operation should succeed");
+  XCTAssertNotEqual(NULL, vBuffer.data, @"Buffer should have data pointer");
+  XCTAssertEqual(200, vBuffer.width, @"Buffer should be 200px wide");
+  XCTAssertEqual( 50, vBuffer.height, @"Buffer should be 50px tall");
+}
+
+- (void)testLeftOrientedImageGetsRotated
+{
+  NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"eastside" ofType:@"jpg"];
+  UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
+  XCTAssertTrue(CGSizeEqualToSize(CGSizeMake(200.f, 50.f), image.size), @"Image should be 50x200 px.");
+  XCTAssertEqual(UIImageOrientationLeft, image.imageOrientation, @"Image should be left-oriented.");
+  
+  vImage_Buffer vBuffer;
+  OSStatus result = UIImageToVImageBuffer(image, &vBuffer, kCGImageAlphaNoneSkipLast);
+  XCTAssertEqual(noErr, result, @"Operation should succeed");
+  XCTAssertNotEqual(NULL, vBuffer.data, @"Buffer should have data pointer");
+  XCTAssertEqual(200, vBuffer.width, @"Buffer should be 200px wide");
+  XCTAssertEqual( 50, vBuffer.height, @"Buffer should be 50px tall");
 }
 
 - (void)testScaledImage1 {

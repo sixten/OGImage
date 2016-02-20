@@ -35,11 +35,6 @@ typedef NS_ENUM(NSInteger, OGImageProcessingScaleMethod) {
 
 + (OGImageProcessing *)shared;
 
-/**
- * Scale `image` to `size` using aspect fit. Note `size` is specified in points.
- */
-- (void)scaleImage:(__OGImage *)image toSize:(CGSize)size cornerRadius:(CGFloat)cornerRadius delegate:(id<OGImageProcessingDelegate>)delegate;
-
 - (void)scaleImage:(__OGImage *)image toSize:(CGSize)size cornerRadius:(CGFloat)cornerRadius method:(OGImageProcessingScaleMethod)method delegate:(id<OGImageProcessingDelegate>)delegate;
 
 @end

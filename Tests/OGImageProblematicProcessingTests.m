@@ -79,7 +79,7 @@ static const CGSize TEST_SCALE_SIZE = {100.f, 20.f};
 
 - (void)testConvertingBadAlpha_Last
 {
-  NSString *path = [[NSBundle mainBundle] pathForResource:@"moldex-logo" ofType:@"gif"];
+  NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"moldex-logo" ofType:@"gif"];
   UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
   
   vImage_Buffer vBuffer;
@@ -90,7 +90,7 @@ static const CGSize TEST_SCALE_SIZE = {100.f, 20.f};
 
 - (void)testConvertingBadAlpha_First
 {
-  NSString *path = [[NSBundle mainBundle] pathForResource:@"moldex-logo" ofType:@"gif"];
+  NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"moldex-logo" ofType:@"gif"];
   UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
   
   vImage_Buffer vBuffer;

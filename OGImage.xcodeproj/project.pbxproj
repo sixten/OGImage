@@ -41,6 +41,8 @@
 		9C23339B1C78FDB7001118A8 /* OGImageScaleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C23339A1C78FDB7001118A8 /* OGImageScaleTests.m */; };
 		9C23339D1C78FEE0001118A8 /* OGImageProblematicProcessingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C23339C1C78FEE0001118A8 /* OGImageProblematicProcessingTests.m */; };
 		9C2333A01C78FF58001118A8 /* NoOpAssertionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C23339F1C78FF58001118A8 /* NoOpAssertionHandler.m */; };
+		9C2333A31C791817001118A8 /* eastside.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9C2333A11C791817001118A8 /* eastside.jpg */; };
+		9C2333A41C791817001118A8 /* westside.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9C2333A21C791817001118A8 /* westside.jpg */; };
 		9C3F1C231C75779400174326 /* __OGImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C121C75779400174326 /* __OGImage.m */; };
 		9C3F1C241C75779400174326 /* OGCachedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C141C75779400174326 /* OGCachedImage.m */; };
 		9C3F1C251C75779400174326 /* OGImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C161C75779400174326 /* OGImage.m */; };
@@ -119,6 +121,8 @@
 		9C23339C1C78FEE0001118A8 /* OGImageProblematicProcessingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageProblematicProcessingTests.m; sourceTree = "<group>"; };
 		9C23339E1C78FF58001118A8 /* NoOpAssertionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoOpAssertionHandler.h; sourceTree = "<group>"; };
 		9C23339F1C78FF58001118A8 /* NoOpAssertionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoOpAssertionHandler.m; sourceTree = "<group>"; };
+		9C2333A11C791817001118A8 /* eastside.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = eastside.jpg; sourceTree = "<group>"; };
+		9C2333A21C791817001118A8 /* westside.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = westside.jpg; sourceTree = "<group>"; };
 		9C3F1BF61C75771300174326 /* libOGImageLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOGImageLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C3F1C061C75773B00174326 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C3F1C0A1C75773B00174326 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -198,6 +202,8 @@
 			children = (
 				9C2333861C78DD8A001118A8 /* moldex-logo.gif */,
 				9C23338B1C78DD8A001118A8 /* Origami.jpg */,
+				9C2333A11C791817001118A8 /* eastside.jpg */,
+				9C2333A21C791817001118A8 /* westside.jpg */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -474,6 +480,8 @@
 			files = (
 				9C2333901C78DD8A001118A8 /* Origami.jpg in Resources */,
 				9C23338C1C78DD8A001118A8 /* moldex-logo.gif in Resources */,
+				9C2333A31C791817001118A8 /* eastside.jpg in Resources */,
+				9C2333A41C791817001118A8 /* westside.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

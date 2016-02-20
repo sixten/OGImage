@@ -31,7 +31,6 @@ CGSize OGAspectFit(CGSize from, CGSize to) {
     } else {
         return CGSizeMake(ceil(to.width), ceil(from.height * (to.width / from.width)));
     }
-    return CGSizeZero;
 }
 
 CGSize OGAspectFill(CGSize from, CGSize to, CGPoint *offset) {
@@ -149,10 +148,6 @@ CGImageRef VImageBufferToCGImage(vImage_Buffer *buffer, __unused CGFloat scale, 
         _delegateSerialQueue = dispatch_queue_create("com.origamilabs.imageProcessing.delegateSerialization", DISPATCH_QUEUE_SERIAL);
     }
     return self;
-}
-
-- (void)scaleImage:(__OGImage *)image toSize:(CGSize)size cornerRadius:(CGFloat)cornerRadius delegate:(id<OGImageProcessingDelegate>)delegate {
-    [self scaleImage:image toSize:size cornerRadius:cornerRadius method:OGImageProcessingScale_AspectFit delegate:delegate];
 }
 
 - (void)scaleImage:(__OGImage *)image toSize:(CGSize)size cornerRadius:(CGFloat)cornerRadius method:(OGImageProcessingScaleMethod)method delegate:(id<OGImageProcessingDelegate>)delegate {
