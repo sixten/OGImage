@@ -74,7 +74,7 @@
 		9C46672018D39709008960BA /* moldex-logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "moldex-logo.gif"; sourceTree = "<group>"; };
 		9C46672218D39EA7008960BA /* OGImageProblematicProcessingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageProblematicProcessingTests.m; sourceTree = "<group>"; };
 		C8030629166526A900073395 /* james_bond.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = james_bond.json; path = "Demo Data/james_bond.json"; sourceTree = "<group>"; };
-		C803062B1665295A00073395 /* OGImageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = OGImageTableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C803062B1665295A00073395 /* OGImageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = OGImageTableViewCell.h; sourceTree = "<group>"; };
 		C803062C1665295A00073395 /* OGImageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OGImageTableViewCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C803062E16652E8200073395 /* placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholder.png; sourceTree = "<group>"; };
 		C803062F16652E8200073395 /* placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder@2x.png"; sourceTree = "<group>"; };

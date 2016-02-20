@@ -1,0 +1,6 @@
+framework module OGImage {
+  umbrella header "OGImageAll.h"
+  
+  export *
+  module * { export * }
+}

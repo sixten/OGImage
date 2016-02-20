@@ -7,6 +7,7 @@
 
 #import "OGImageCache.h"
 #import "OGImage.h"
+#import "__OGImage.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <ImageIO/ImageIO.h>
 

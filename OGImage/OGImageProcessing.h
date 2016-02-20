@@ -5,10 +5,10 @@
 //  Copyright (c) 2012 Origami Labs, Inc.. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "__OGImage.h"
+#import <UIKit/UIKit.h>
 
-@class OGImageProcessing;
+@class OGImageProcessing, __OGImage;
+
 
 @protocol OGImageProcessingDelegate
 
@@ -18,6 +18,7 @@
 - (void)imageProcessingFailed:(OGImageProcessing *)processing error:(NSError *)error;
 
 @end
+
 
 extern NSString * const OGImageProcessingErrorDomain;
 

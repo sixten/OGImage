@@ -6,6 +6,7 @@
 //
 
 #import "OGImageProcessing.h"
+#import "__OGImage.h"
 #import <Accelerate/Accelerate.h>
 
 NSString * const OGImageProcessingErrorDomain = @"OGImageProcessingErrorDomain";

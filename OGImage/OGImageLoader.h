@@ -5,22 +5,8 @@
 //  Copyright (c) 2012 Origami Labs, Inc.. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "__OGImage.h"
-
-extern const NSInteger OGImageLoadingError;
-
-extern NSString * const OGImageLoadingErrorDomain;
-
-@class OGImageLoader;
-@protocol OGImageLoaderDelegate <NSObject>
-
-@required
-
-- (void)imageLoader:(OGImageLoader*)loader didLoadImage:(__OGImage *)image forURL:(NSURL *)url;
-- (void)imageLoader:(OGImageLoader*)loader failedForURL:(NSURL *)url error:(NSError *)error;
-
-@end
+#import <UIKit/UIKit.h>
+#import "OGImageLoaderDelegate.h"
 
 typedef NS_ENUM(NSInteger, OGImageLoaderPriority) {
     OGImageLoaderPriority_Low,

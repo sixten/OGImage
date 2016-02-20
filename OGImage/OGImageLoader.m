@@ -7,6 +7,7 @@
 
 #import "OGImageLoader.h"
 #import "OGImageRequest.h"
+#import "__OGImage.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
 #pragma mark - Constants

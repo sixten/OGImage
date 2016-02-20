@@ -5,7 +5,7 @@
 //  Copyright (c) 2012 Origami Labs, Inc.. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @class __OGImage;
 

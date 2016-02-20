@@ -7,6 +7,7 @@
 //
 
 #import "OGImageRequest.h"
+#import "__OGImage.h"
 #import <ImageIO/ImageIO.h>
 
 @implementation OGImageRequest {

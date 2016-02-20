@@ -7,8 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C1CBAC41C78C7F8004BA26E /* OGImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C1CBABD1C78C7F7004BA26E /* OGImage.framework */; };
+		9C1CBAC51C78C7F8004BA26E /* OGImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9C1CBABD1C78C7F7004BA26E /* OGImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9C1CBACA1C78C824004BA26E /* OGImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C1CBABD1C78C7F7004BA26E /* OGImage.framework */; };
+		9C1CBACB1C78C853004BA26E /* __OGImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C121C75779400174326 /* __OGImage.m */; };
+		9C1CBACC1C78C853004BA26E /* OGCachedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C141C75779400174326 /* OGCachedImage.m */; };
+		9C1CBACD1C78C853004BA26E /* OGImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C161C75779400174326 /* OGImage.m */; };
+		9C1CBACE1C78C853004BA26E /* OGImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C181C75779400174326 /* OGImageCache.m */; };
+		9C1CBACF1C78C853004BA26E /* OGImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C1A1C75779400174326 /* OGImageLoader.m */; };
+		9C1CBAD01C78C853004BA26E /* OGImageProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C1C1C75779400174326 /* OGImageProcessing.m */; };
+		9C1CBAD11C78C853004BA26E /* OGImageRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C1E1C75779400174326 /* OGImageRequest.m */; };
+		9C1CBAD21C78C853004BA26E /* OGImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C201C75779400174326 /* OGImageView.m */; };
+		9C1CBAD31C78C853004BA26E /* OGScaledImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C221C75779400174326 /* OGScaledImage.m */; };
+		9C1CBAD41C78C873004BA26E /* __OGImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F1C111C75779400174326 /* __OGImage.h */; };
+		9C1CBAD51C78C873004BA26E /* OGCachedImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F1C131C75779400174326 /* OGCachedImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9C1CBAD61C78C873004BA26E /* OGImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F1C151C75779400174326 /* OGImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9C1CBAD71C78C873004BA26E /* OGImageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F1C171C75779400174326 /* OGImageCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9C1CBAD81C78C873004BA26E /* OGImageLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F1C191C75779400174326 /* OGImageLoader.h */; };
+		9C1CBAD91C78C873004BA26E /* OGImageProcessing.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F1C1B1C75779400174326 /* OGImageProcessing.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9C1CBADA1C78C873004BA26E /* OGImageRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F1C1D1C75779400174326 /* OGImageRequest.h */; };
+		9C1CBADB1C78C873004BA26E /* OGImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F1C1F1C75779400174326 /* OGImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9C1CBADC1C78C873004BA26E /* OGScaledImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F1C211C75779400174326 /* OGScaledImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9C1CBAE11C78CD80004BA26E /* OGImageAll.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C1CBADF1C78CD80004BA26E /* OGImageAll.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9C1CBAE51C78CFB0004BA26E /* OGImageLoaderDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C1CBAE41C78CFB0004BA26E /* OGImageLoaderDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9C3F1C091C75773B00174326 /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C081C75773B00174326 /* Tests.m */; };
-		9C3F1C0B1C75773B00174326 /* libOGImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C3F1BF61C75771300174326 /* libOGImage.a */; };
 		9C3F1C231C75779400174326 /* __OGImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C121C75779400174326 /* __OGImage.m */; };
 		9C3F1C241C75779400174326 /* OGCachedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C141C75779400174326 /* OGCachedImage.m */; };
 		9C3F1C251C75779400174326 /* OGImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C161C75779400174326 /* OGImage.m */; };
@@ -24,26 +46,32 @@
 		9C3F1C4D1C757BCB00174326 /* OGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C481C757BCB00174326 /* OGAppDelegate.m */; };
 		9C3F1C4E1C757BCB00174326 /* OGImageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C4A1C757BCB00174326 /* OGImageTableViewCell.m */; };
 		9C3F1C4F1C757BCB00174326 /* OGViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F1C4C1C757BCB00174326 /* OGViewController.m */; };
-		9C3F1C501C757D2100174326 /* libOGImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C3F1BF61C75771300174326 /* libOGImage.a */; };
-		9C3F1C521C757D4600174326 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C3F1C511C757D4600174326 /* Accelerate.framework */; };
-		9C3F1C541C757D4D00174326 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C3F1C531C757D4D00174326 /* CoreGraphics.framework */; };
-		9C3F1C571C757D6200174326 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C3F1C551C757D6200174326 /* AssetsLibrary.framework */; };
-		9C3F1C581C757D6200174326 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C3F1C561C757D6200174326 /* ImageIO.framework */; };
 		9C3F1C5B1C757DB200174326 /* OGViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F1C591C757DB200174326 /* OGViewController.xib */; };
 		9C3F1C601C757E3200174326 /* james_bond.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F1C5D1C757E3200174326 /* james_bond.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		9C3F1C0C1C75773B00174326 /* PBXContainerItemProxy */ = {
+		9C1CBAC21C78C7F8004BA26E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9C3F1BEE1C75771300174326 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 9C3F1BF51C75771300174326;
-			remoteInfo = OGImage;
+			remoteGlobalIDString = 9C1CBABC1C78C7F7004BA26E;
+			remoteInfo = OGImageF;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		9C1CBAC91C78C7F8004BA26E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9C1CBAC51C78C7F8004BA26E /* OGImage.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9C3F1BF41C75771300174326 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -56,7 +84,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		9C3F1BF61C75771300174326 /* libOGImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOGImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C1CBABD1C78C7F7004BA26E /* OGImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OGImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C1CBADE1C78CD80004BA26E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9C1CBADF1C78CD80004BA26E /* OGImageAll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGImageAll.h; sourceTree = "<group>"; };
+		9C1CBAE41C78CFB0004BA26E /* OGImageLoaderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGImageLoaderDelegate.h; sourceTree = "<group>"; };
+		9C1CBAE61C78D31D004BA26E /* OGImage.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = OGImage.modulemap; sourceTree = "<group>"; };
+		9C3F1BF61C75771300174326 /* libOGImageLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOGImageLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C3F1C061C75773B00174326 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C3F1C081C75773B00174326 /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		9C3F1C0A1C75773B00174326 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -98,6 +131,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9C1CBAB91C78C7F7004BA26E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9C3F1BF31C75771300174326 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -109,7 +149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C3F1C0B1C75773B00174326 /* libOGImage.a in Frameworks */,
+				9C1CBACA1C78C824004BA26E /* OGImage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,11 +157,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C3F1C571C757D6200174326 /* AssetsLibrary.framework in Frameworks */,
-				9C3F1C581C757D6200174326 /* ImageIO.framework in Frameworks */,
-				9C3F1C541C757D4D00174326 /* CoreGraphics.framework in Frameworks */,
-				9C3F1C521C757D4600174326 /* Accelerate.framework in Frameworks */,
-				9C3F1C501C757D2100174326 /* libOGImage.a in Frameworks */,
+				9C1CBAC41C78C7F8004BA26E /* OGImage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,9 +178,10 @@
 		9C3F1BF71C75771300174326 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9C3F1BF61C75771300174326 /* libOGImage.a */,
+				9C3F1BF61C75771300174326 /* libOGImageLib.a */,
 				9C3F1C061C75773B00174326 /* Tests.xctest */,
 				9C3F1C301C757B8C00174326 /* OGImageDemo.app */,
+				9C1CBABD1C78C7F7004BA26E /* OGImage.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -152,24 +189,28 @@
 		9C3F1BF81C75771300174326 /* OGImage */ = {
 			isa = PBXGroup;
 			children = (
-				9C3F1C111C75779400174326 /* __OGImage.h */,
-				9C3F1C121C75779400174326 /* __OGImage.m */,
-				9C3F1C131C75779400174326 /* OGCachedImage.h */,
-				9C3F1C141C75779400174326 /* OGCachedImage.m */,
+				9C1CBADE1C78CD80004BA26E /* Info.plist */,
+				9C1CBAE61C78D31D004BA26E /* OGImage.modulemap */,
+				9C1CBADF1C78CD80004BA26E /* OGImageAll.h */,
 				9C3F1C151C75779400174326 /* OGImage.h */,
 				9C3F1C161C75779400174326 /* OGImage.m */,
-				9C3F1C171C75779400174326 /* OGImageCache.h */,
-				9C3F1C181C75779400174326 /* OGImageCache.m */,
-				9C3F1C191C75779400174326 /* OGImageLoader.h */,
-				9C3F1C1A1C75779400174326 /* OGImageLoader.m */,
-				9C3F1C1B1C75779400174326 /* OGImageProcessing.h */,
-				9C3F1C1C1C75779400174326 /* OGImageProcessing.m */,
-				9C3F1C1D1C75779400174326 /* OGImageRequest.h */,
-				9C3F1C1E1C75779400174326 /* OGImageRequest.m */,
-				9C3F1C1F1C75779400174326 /* OGImageView.h */,
-				9C3F1C201C75779400174326 /* OGImageView.m */,
+				9C3F1C131C75779400174326 /* OGCachedImage.h */,
+				9C3F1C141C75779400174326 /* OGCachedImage.m */,
 				9C3F1C211C75779400174326 /* OGScaledImage.h */,
 				9C3F1C221C75779400174326 /* OGScaledImage.m */,
+				9C3F1C1F1C75779400174326 /* OGImageView.h */,
+				9C3F1C201C75779400174326 /* OGImageView.m */,
+				9C1CBAE41C78CFB0004BA26E /* OGImageLoaderDelegate.h */,
+				9C3F1C191C75779400174326 /* OGImageLoader.h */,
+				9C3F1C1A1C75779400174326 /* OGImageLoader.m */,
+				9C3F1C1D1C75779400174326 /* OGImageRequest.h */,
+				9C3F1C1E1C75779400174326 /* OGImageRequest.m */,
+				9C3F1C1B1C75779400174326 /* OGImageProcessing.h */,
+				9C3F1C1C1C75779400174326 /* OGImageProcessing.m */,
+				9C3F1C171C75779400174326 /* OGImageCache.h */,
+				9C3F1C181C75779400174326 /* OGImageCache.m */,
+				9C3F1C111C75779400174326 /* __OGImage.h */,
+				9C3F1C121C75779400174326 /* __OGImage.m */,
 			);
 			path = OGImage;
 			sourceTree = "<group>";
@@ -231,10 +272,49 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		9C1CBABA1C78C7F7004BA26E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C1CBAE11C78CD80004BA26E /* OGImageAll.h in Headers */,
+				9C1CBAD61C78C873004BA26E /* OGImage.h in Headers */,
+				9C1CBAD51C78C873004BA26E /* OGCachedImage.h in Headers */,
+				9C1CBADC1C78C873004BA26E /* OGScaledImage.h in Headers */,
+				9C1CBAD91C78C873004BA26E /* OGImageProcessing.h in Headers */,
+				9C1CBAE51C78CFB0004BA26E /* OGImageLoaderDelegate.h in Headers */,
+				9C1CBAD71C78C873004BA26E /* OGImageCache.h in Headers */,
+				9C1CBADB1C78C873004BA26E /* OGImageView.h in Headers */,
+				9C1CBAD41C78C873004BA26E /* __OGImage.h in Headers */,
+				9C1CBADA1C78C873004BA26E /* OGImageRequest.h in Headers */,
+				9C1CBAD81C78C873004BA26E /* OGImageLoader.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-		9C3F1BF51C75771300174326 /* OGImage */ = {
+		9C1CBABC1C78C7F7004BA26E /* OGImage */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9C3F1BFF1C75771300174326 /* Build configuration list for PBXNativeTarget "OGImage" */;
+			buildConfigurationList = 9C1CBAC81C78C7F8004BA26E /* Build configuration list for PBXNativeTarget "OGImage" */;
+			buildPhases = (
+				9C1CBAB81C78C7F7004BA26E /* Sources */,
+				9C1CBAB91C78C7F7004BA26E /* Frameworks */,
+				9C1CBABA1C78C7F7004BA26E /* Headers */,
+				9C1CBABB1C78C7F7004BA26E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OGImage;
+			productName = OGImageF;
+			productReference = 9C1CBABD1C78C7F7004BA26E /* OGImage.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		9C3F1BF51C75771300174326 /* OGImageLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9C3F1BFF1C75771300174326 /* Build configuration list for PBXNativeTarget "OGImageLib" */;
 			buildPhases = (
 				9C3F1BF21C75771300174326 /* Sources */,
 				9C3F1BF31C75771300174326 /* Frameworks */,
@@ -244,9 +324,9 @@
 			);
 			dependencies = (
 			);
-			name = OGImage;
+			name = OGImageLib;
 			productName = OGImage;
-			productReference = 9C3F1BF61C75771300174326 /* libOGImage.a */;
+			productReference = 9C3F1BF61C75771300174326 /* libOGImageLib.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		9C3F1C051C75773B00174326 /* Tests */ = {
@@ -260,7 +340,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				9C3F1C0D1C75773B00174326 /* PBXTargetDependency */,
 			);
 			name = Tests;
 			productName = Tests;
@@ -274,10 +353,12 @@
 				9C3F1C2C1C757B8C00174326 /* Sources */,
 				9C3F1C2D1C757B8C00174326 /* Frameworks */,
 				9C3F1C2E1C757B8C00174326 /* Resources */,
+				9C1CBAC91C78C7F8004BA26E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				9C1CBAC31C78C7F8004BA26E /* PBXTargetDependency */,
 			);
 			name = OGImageDemo;
 			productName = OGImageDemo;
@@ -293,11 +374,15 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Origami Labs";
 				TargetAttributes = {
+					9C1CBABC1C78C7F7004BA26E = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
 					9C3F1BF51C75771300174326 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
 					9C3F1C051C75773B00174326 = {
 						CreatedOnToolsVersion = 7.2.1;
+						TestTargetID = 9C3F1C2F1C757B8C00174326;
 					};
 					9C3F1C2F1C757B8C00174326 = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -317,14 +402,22 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9C3F1BF51C75771300174326 /* OGImage */,
+				9C3F1BF51C75771300174326 /* OGImageLib */,
 				9C3F1C051C75773B00174326 /* Tests */,
 				9C3F1C2F1C757B8C00174326 /* OGImageDemo */,
+				9C1CBABC1C78C7F7004BA26E /* OGImage */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9C1CBABB1C78C7F7004BA26E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9C3F1C041C75773B00174326 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -346,6 +439,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9C1CBAB81C78C7F7004BA26E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C1CBACB1C78C853004BA26E /* __OGImage.m in Sources */,
+				9C1CBACC1C78C853004BA26E /* OGCachedImage.m in Sources */,
+				9C1CBACD1C78C853004BA26E /* OGImage.m in Sources */,
+				9C1CBACE1C78C853004BA26E /* OGImageCache.m in Sources */,
+				9C1CBACF1C78C853004BA26E /* OGImageLoader.m in Sources */,
+				9C1CBAD01C78C853004BA26E /* OGImageProcessing.m in Sources */,
+				9C1CBAD11C78C853004BA26E /* OGImageRequest.m in Sources */,
+				9C1CBAD21C78C853004BA26E /* OGImageView.m in Sources */,
+				9C1CBAD31C78C853004BA26E /* OGScaledImage.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9C3F1BF21C75771300174326 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -384,10 +493,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		9C3F1C0D1C75773B00174326 /* PBXTargetDependency */ = {
+		9C1CBAC31C78C7F8004BA26E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9C3F1BF51C75771300174326 /* OGImage */;
-			targetProxy = 9C3F1C0C1C75773B00174326 /* PBXContainerItemProxy */;
+			target = 9C1CBABC1C78C7F7004BA26E /* OGImage */;
+			targetProxy = 9C1CBAC21C78C7F8004BA26E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -411,6 +520,48 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		9C1CBAC61C78C7F8004BA26E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = OGImage/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = OGImage/OGImage.modulemap;
+				PRODUCT_BUNDLE_IDENTIFIER = com.origami.OGImage;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		9C1CBAC71C78C7F8004BA26E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = OGImage/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = OGImage/OGImage.modulemap;
+				PRODUCT_BUNDLE_IDENTIFIER = com.origami.OGImage;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		9C3F1BFD1C75771300174326 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -457,7 +608,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -505,7 +656,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
@@ -516,6 +667,7 @@
 		9C3F1C001C75771300174326 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -525,6 +677,7 @@
 		9C3F1C011C75771300174326 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -536,7 +689,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.origami.Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.origami.OGImage.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -546,7 +699,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.origami.Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.origami.OGImage.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -555,6 +708,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_WARN_UNUSED_PARAMETER = NO;
 				INFOPLIST_FILE = OGImageDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.origami.OGImageDemo;
@@ -566,6 +720,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_WARN_UNUSED_PARAMETER = NO;
 				INFOPLIST_FILE = OGImageDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.origami.OGImageDemo;
@@ -576,6 +731,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9C1CBAC81C78C7F8004BA26E /* Build configuration list for PBXNativeTarget "OGImage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9C1CBAC61C78C7F8004BA26E /* Debug */,
+				9C1CBAC71C78C7F8004BA26E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9C3F1BF11C75771300174326 /* Build configuration list for PBXProject "OGImage" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -585,7 +749,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9C3F1BFF1C75771300174326 /* Build configuration list for PBXNativeTarget "OGImage" */ = {
+		9C3F1BFF1C75771300174326 /* Build configuration list for PBXNativeTarget "OGImageLib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9C3F1C001C75771300174326 /* Debug */,
@@ -610,6 +774,7 @@
 				9C3F1C461C757B8C00174326 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
