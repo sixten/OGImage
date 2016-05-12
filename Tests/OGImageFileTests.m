@@ -44,4 +44,14 @@ static CGSize const OGExpectedSize = {1024.f, 768.f};
   [self waitForExpectationsWithTimeout:5. handler:nil];
 }
 
+// TODO: test coverage for OGEXIFOrientationToUIImageOrientation()
+
+// TODO: test coverage for -[__OGImage initWithCGImage:type:info:alphaInfo:]
+
+// TODO: test failure cases in -[__OGImage initWithData:scale:]
+
+// TODO: test PNG write in -[__OGImage writeToURL:error:]
+
+// TODO: test image destination failure in -[__OGImage writeToURL:error:]
+
 @end

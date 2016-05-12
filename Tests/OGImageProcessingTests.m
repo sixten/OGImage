@@ -127,4 +127,8 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
   [[OGImageCache shared] purgeCache:YES];
 }
 
+// TODO: test coverage for other orientations (need to test image data, not just dimensions)
+
+// TODO: test coverage for rounded corners
+
 @end
