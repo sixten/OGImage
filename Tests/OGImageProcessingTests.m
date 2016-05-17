@@ -10,6 +10,7 @@
 @import Accelerate;
 @import OGImage;
 #import "OGTestImageObserver.h"
+#import "__OGImage.h"
 
 extern CGSize OGAspectFit(CGSize from, CGSize to);
 extern CGSize OGAspectFill(CGSize from, CGSize to, CGPoint *offset);
@@ -20,6 +21,10 @@ static BOOL OGCompareImages(CGImageRef left, CGImageRef right);
 static NSString * const TEST_IMAGE_URL_STRING = @"http://easyquestion.net/thinkagain/wp-content/uploads/2009/05/james-bond.jpg";
 static const CGSize TEST_IMAGE_SIZE = {317.f, 400.f};
 static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
+
+@interface OGImageProcessing (Privates)
+- (__OGImage *)applyCornerRadius:(CGFloat)cornerRadius toImage:(__OGImage *)origImage;
+@end
 
 @interface OGImageProcessingTests : XCTestCase
 
@@ -192,8 +197,36 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
   [[OGImageCache shared] purgeCache:YES];
 }
 
+- (void)testCornerRoundingReturnsOriginalImageWithNoRadius {
+  NSURL *url = [[NSBundle bundleForClass:[self class]] URLForResource:@"reference" withExtension:@"png"];
+  __OGImage *image = [[__OGImage alloc] initWithDataAtURL:url];
+  
+  __OGImage *result = [[OGImageProcessing shared] applyCornerRadius:0 toImage:image];
+  XCTAssertEqual(image, result);
+}
 
-// TODO: test coverage for rounded corners
+- (void)testCornerRounding {
+  NSURL *url = [[NSBundle bundleForClass:[self class]] URLForResource:@"corner_radius" withExtension:@"png"];
+  UIImage *referenceImage = [[UIImage alloc] initWithContentsOfFile:url.path];
+  
+  url = [[NSBundle bundleForClass:[self class]] URLForResource:@"reference" withExtension:@"png"];
+  __OGImage *image = [[__OGImage alloc] initWithDataAtURL:url];
+  
+  __OGImage *result = [[OGImageProcessing shared] applyCornerRadius:10 toImage:image];
+  XCTAssertNotNil(result, @"Should return an image");
+  XCTAssertNotEqual(image, result, @"Should return a new image");
+  XCTAssertTrue(CGSizeEqualToSize(image.size, result.size), @"Should maintain the same size");
+  XCTAssertEqual(image.scale, result.scale, @"Should maintain the same scale");
+  
+  // difference-based image compare doesn't work with alpha corners: blend onto a black background for comparison
+  UIGraphicsBeginImageContextWithOptions(result.size, YES, result.scale);
+  [[UIColor blackColor] setFill];
+  UIRectFill(CGRectMake(0, 0, result.size.width, result.size.height));
+  [result drawAtPoint:CGPointZero];
+  UIImage *test = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  XCTAssertTrue(OGCompareImages(referenceImage.CGImage, test.CGImage), @"Images should compare the same");
+}
 
 @end
 

@@ -72,6 +72,7 @@
 		F6025F8B1CEA8D5700F67096 /* up_mirrored.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F6025F821CEA8D5600F67096 /* up_mirrored.jpg */; };
 		F6025F8C1CEA8D5700F67096 /* up.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F6025F831CEA8D5600F67096 /* up.jpg */; };
 		F699818E1CEA958500263EE9 /* negative.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F699818D1CEA958500263EE9 /* negative.jpg */; };
+		F6FC6B241CEB835100CF03A3 /* corner_radius.png in Resources */ = {isa = PBXBuildFile; fileRef = F6FC6B231CEB835100CF03A3 /* corner_radius.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -185,6 +186,7 @@
 		F6025F821CEA8D5600F67096 /* up_mirrored.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = up_mirrored.jpg; sourceTree = "<group>"; };
 		F6025F831CEA8D5600F67096 /* up.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = up.jpg; sourceTree = "<group>"; };
 		F699818D1CEA958500263EE9 /* negative.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = negative.jpg; sourceTree = "<group>"; };
+		F6FC6B231CEB835100CF03A3 /* corner_radius.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = corner_radius.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,6 +242,7 @@
 				F6025F831CEA8D5600F67096 /* up.jpg */,
 				9C5275FD1CEB652D00058027 /* aspect_fill.png */,
 				9C5275FF1CEB693600058027 /* aspect_fill@2x.png */,
+				F6FC6B231CEB835100CF03A3 /* corner_radius.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -522,6 +525,7 @@
 				9C5276001CEB693600058027 /* aspect_fill@2x.png in Resources */,
 				F6025F851CEA8D5700F67096 /* down.jpg in Resources */,
 				F6025F871CEA8D5700F67096 /* left.jpg in Resources */,
+				F6FC6B241CEB835100CF03A3 /* corner_radius.png in Resources */,
 				9C2333901C78DD8A001118A8 /* Origami.jpg in Resources */,
 				F6025F8B1CEA8D5700F67096 /* up_mirrored.jpg in Resources */,
 				9C23338C1C78DD8A001118A8 /* moldex-logo.gif in Resources */,

@@ -199,59 +199,44 @@ CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGPoint o
 }
 
 - (__OGImage *)applyCornerRadius:(CGFloat)cornerRadius toImage:(__OGImage *)origImage {
-    if (0.f == cornerRadius)
+    if( 0.f >= cornerRadius) {
         return origImage;
-    CGSize _size = origImage.size;
-    CGFloat _cornerRadius = cornerRadius;
-    // If we're on a retina display, make sure everything is @2x
-    if ([[UIScreen mainScreen] scale] > 1.f) {
-        _size.width *= origImage.scale;
-        _size.height *= origImage.scale;
-        _cornerRadius *= origImage.scale;
     }
+    
+    // keep the size & scale of the result image consistent with the original
+    CGSize _size = CGSizeMake(origImage.size.width * origImage.scale, origImage.size.height * origImage.scale);
+    CGFloat _cornerRadius = cornerRadius * origImage.scale;
 
-    // Lots of weird math
-    size_t bitsPerComponent = 8;
-    size_t numberOfComponents = 4;
-    size_t bytesPerRow = (size_t)_size.width * (numberOfComponents * bitsPerComponent) / 8;
-    size_t dataSize = (size_t)_size.height * bytesPerRow;
-    uint8_t *data = (uint8_t *)malloc(dataSize);
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    bzero(data, dataSize);
-
+    // create a new bitmap context
+    CGColorSpaceRef colorSpace = CGImageGetColorSpace(origImage.CGImage);
     CGImageAlphaInfo alphaInfo = kCGImageAlphaPremultipliedLast;
-    CGContextRef context = CGBitmapContextCreate(data, (size_t)_size.width, (size_t)_size.height, bitsPerComponent, bytesPerRow, colorSpace, alphaInfo);
-
-    // Let's round the corners, if desired
-    if (_cornerRadius != 0.0) {
-        CGContextSaveGState(context);
-        CGContextMoveToPoint(context, 0.f, _cornerRadius);
-        CGContextAddArc(context, _cornerRadius, _cornerRadius, _cornerRadius, M_PI, 1.5 * M_PI, 0);
-        CGContextAddLineToPoint(context, _size.width - _cornerRadius, 0.f);
-        CGContextAddArc(context, _size.width - _cornerRadius, _cornerRadius, _cornerRadius, 1.5 * M_PI, 0.f, 0);
-        CGContextAddLineToPoint(context, _size.width, _size.height - _cornerRadius);
-        CGContextAddArc(context, _size.width - _cornerRadius, _size.height - _cornerRadius, _cornerRadius, 0.f, 0.5 * M_PI, 0);
-        CGContextAddLineToPoint(context, _cornerRadius, _size.height);
-        CGContextAddArc(context, _cornerRadius, _size.height - _cornerRadius, _cornerRadius, 0.5 * M_PI, M_PI, 0);
-        CGContextAddLineToPoint(context, 0.f, _cornerRadius);
-        CGContextSaveGState(context);
+    CGBitmapInfo bitmapInfo = (CGBitmapInfo)alphaInfo;
+    bitmapInfo |= CGImageGetBitmapInfo(origImage.CGImage) & kCGBitmapByteOrderMask;
+    CGContextRef context = CGBitmapContextCreate(NULL, (size_t)_size.width, (size_t)_size.height, 8, 0, colorSpace, bitmapInfo);
+    
+    __OGImage *result = nil;
+    if( NULL != context ) {
+        // set a rounded-corner clipping path
+        UIBezierPath *roundRect = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, _size.width, _size.height) cornerRadius:_cornerRadius];
+        CGContextAddPath(context, roundRect.CGPath);
         CGContextClip(context);
+
+        // draw the image into the new context
+        UIGraphicsPushContext(context);
+        CGContextScaleCTM(context, 1.f, -1.f);
+        CGContextTranslateCTM(context, 0.f, -_size.height);
+        [origImage drawAtPoint:CGPointZero];
+        UIGraphicsPopContext();
+
+        // create a new image from the result
+        CGImageRef image = CGBitmapContextCreateImage(context);
+        if( NULL != image ) {
+            result = [[__OGImage alloc] initWithCGImage:image type:@"public.png" info:origImage.originalFileProperties alphaInfo:alphaInfo scale:origImage.scale orientation:origImage.imageOrientation];
+            CFRelease(image);
+        }
+        CGContextRelease(context);
     }
-
-    // Create a fresh image from the context
-    CGContextDrawImage(context, CGRectMake(0.f, 0.f, _size.width, _size.height), [origImage CGImage]);
-    if (_cornerRadius != 0.0)
-        CGContextRestoreGState(context);
-    CGImageRef image = CGBitmapContextCreateImage(context);
-    __OGImage *ret = [[__OGImage alloc] initWithCGImage:image type:@"public.png" info:origImage.originalFileProperties alphaInfo:alphaInfo scale:origImage.scale orientation:origImage.imageOrientation];
-    if (image)
-        CFRelease(image);
-
-    CGContextRelease(context);
-    CGColorSpaceRelease(colorSpace);
-    free(data);
-    context = NULL;
-    return ret;
+    return result;
 }
 
 @end
