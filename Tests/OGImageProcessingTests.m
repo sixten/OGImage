@@ -10,18 +10,21 @@
 @import Accelerate;
 @import OGImage;
 #import "OGTestImageObserver.h"
+#import "__OGImage.h"
 
 extern CGSize OGAspectFit(CGSize from, CGSize to);
 extern CGSize OGAspectFill(CGSize from, CGSize to, CGPoint *offset);
-
-extern OSStatus UIImageToVImageBuffer(UIImage *image, vImage_Buffer *buffer, CGImageAlphaInfo alphaInfo);
-extern CGImageRef VImageBufferToCGImage(vImage_Buffer *buffer, __unused CGFloat scale, CGImageAlphaInfo alphaInfo);
+extern CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGPoint offset, CGImageAlphaInfo alphaInfo);
 
 static BOOL OGCompareImages(CGImageRef left, CGImageRef right);
 
 static NSString * const TEST_IMAGE_URL_STRING = @"http://easyquestion.net/thinkagain/wp-content/uploads/2009/05/james-bond.jpg";
 static const CGSize TEST_IMAGE_SIZE = {317.f, 400.f};
 static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
+
+@interface OGImageProcessing (Privates)
+- (__OGImage *)applyCornerRadius:(CGFloat)cornerRadius toImage:(__OGImage *)origImage;
+@end
 
 @interface OGImageProcessingTests : XCTestCase
 
@@ -65,8 +68,15 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
 - (void)testAspectFill_3 {
   CGPoint pt = CGPointZero;
   CGSize newSize = OGAspectFill(CGSizeMake(1920.f, 1024.f), CGSizeMake(256.f, 256.f), &pt);
-  XCTAssertTrue(CGSizeEqualToSize(newSize, CGSizeMake(480.f, 256.f)), @"Expected 480, 256");
+  XCTAssertTrue(CGSizeEqualToSize(newSize, CGSizeMake(256.f, 256.f)), @"Expected 256, 256");
   XCTAssertTrue(pt.x == 112.f && pt.y == 0.f, @"Expected offset point at 112, 0");
+}
+
+- (void)testAspectFill_4 {
+  CGPoint pt = CGPointZero;
+  CGSize newSize = OGAspectFill(CGSizeMake(512.f, 1024.f), CGSizeMake(256.f, 256.f), &pt);
+  XCTAssertTrue(CGSizeEqualToSize(newSize, CGSizeMake(256.f, 256.f)), @"Expected 256, 256");
+  XCTAssertTrue(pt.x == 0.f && pt.y == 128.f, @"Expected offset point at 0, 128");
 }
 
 - (void)testRightOrientedImageGetsRotated
@@ -76,12 +86,11 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
   XCTAssertTrue(CGSizeEqualToSize(CGSizeMake(200.f, 50.f), image.size), @"Image should be 200x50 px.");
   XCTAssertEqual(UIImageOrientationRight, image.imageOrientation, @"Image should be right-oriented.");
   
-  vImage_Buffer vBuffer;
-  OSStatus result = UIImageToVImageBuffer(image, &vBuffer, kCGImageAlphaNoneSkipLast);
-  XCTAssertEqual(noErr, result, @"Operation should succeed");
-  XCTAssertNotEqual(NULL, vBuffer.data, @"Buffer should have data pointer");
-  XCTAssertEqual(200, vBuffer.width, @"Buffer should be 200px wide");
-  XCTAssertEqual( 50, vBuffer.height, @"Buffer should be 50px tall");
+  CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, image.size, CGPointZero, kCGImageAlphaNoneSkipLast);
+  XCTAssertNotEqual(NULL, cgImage, @"Image creation should succeed");
+  XCTAssertEqual(200, CGImageGetWidth(cgImage), @"Image should be 200px wide");
+  XCTAssertEqual( 50, CGImageGetHeight(cgImage), @"Image should be 50px tall");
+  CGImageRelease(cgImage);
 }
 
 - (void)testLeftOrientedImageGetsRotated
@@ -91,12 +100,11 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
   XCTAssertTrue(CGSizeEqualToSize(CGSizeMake(200.f, 50.f), image.size), @"Image should be 50x200 px.");
   XCTAssertEqual(UIImageOrientationLeft, image.imageOrientation, @"Image should be left-oriented.");
   
-  vImage_Buffer vBuffer;
-  OSStatus result = UIImageToVImageBuffer(image, &vBuffer, kCGImageAlphaNoneSkipLast);
-  XCTAssertEqual(noErr, result, @"Operation should succeed");
-  XCTAssertNotEqual(NULL, vBuffer.data, @"Buffer should have data pointer");
-  XCTAssertEqual(200, vBuffer.width, @"Buffer should be 200px wide");
-  XCTAssertEqual( 50, vBuffer.height, @"Buffer should be 50px tall");
+  CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, image.size, CGPointZero, kCGImageAlphaNoneSkipLast);
+  XCTAssertNotEqual(NULL, cgImage, @"Image creation should succeed");
+  XCTAssertEqual(200, CGImageGetWidth(cgImage), @"Image should be 200px wide");
+  XCTAssertEqual( 50, CGImageGetHeight(cgImage), @"Image should be 50px tall");
+  CGImageRelease(cgImage);
 }
 
 - (void)testScaledImage1 {
@@ -111,7 +119,7 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
       XCTAssertNotNil(img.image, @"Got success notification, but no image.");
       if (nil != img.image) {
         CGSize expectedSize = OGAspectFit(TEST_IMAGE_SIZE, TEST_SCALE_SIZE);
-        XCTAssertTrue(CGSizeEqualToSize(expectedSize, image.scaledImage.size), @"Expected image of size %@, got %@", NSStringFromCGSize(expectedSize), NSStringFromCGSize(image.image.size));
+        XCTAssertTrue(CGSizeEqualToSize(expectedSize, image.scaledImage.size), @"Expected image of size %@, got %@", NSStringFromCGSize(expectedSize), NSStringFromCGSize(image.scaledImage.size));
       }
       [expectation fulfill];
     }
@@ -144,21 +152,81 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
     UIImage *testImage = [[UIImage alloc] initWithContentsOfFile:path];
     XCTAssertTrue(CGSizeEqualToSize(CGSizeMake(120.f, 80.f), testImage.size), @"Image should be 120x80 px.");
     
-    vImage_Buffer vBuffer;
-    OSStatus result = UIImageToVImageBuffer(testImage, &vBuffer, kCGImageAlphaNoneSkipLast);
-    XCTAssertEqual(noErr, result, @"Operation should succeed");
-    XCTAssertNotEqual(NULL, vBuffer.data, @"Buffer should have data pointer");
-    XCTAssertEqual(120, vBuffer.width, @"Buffer should be 120px wide");
-    XCTAssertEqual( 80, vBuffer.height, @"Buffer should be 80px tall");
-    
-    CGImageRef cgImage = VImageBufferToCGImage(&vBuffer, 1, kCGImageAlphaNoneSkipLast);
+    CGImageRef cgImage = CreateCGImageFromUIImageAtSize(testImage, testImage.size, CGPointZero, kCGImageAlphaNoneSkipLast);
+    XCTAssertNotEqual(NULL, cgImage, @"Image creation should succeed");
+    XCTAssertEqual(120, CGImageGetWidth(cgImage), @"Image should be 120px wide");
+    XCTAssertEqual( 80, CGImageGetHeight(cgImage), @"Image should be 80px tall");
     XCTAssertTrue(OGCompareImages(referenceImage.CGImage, cgImage), @"Images should compare the same");
     CGImageRelease(cgImage);
   }
 }
 
+- (void)testAspectFillOffset {
+  // make sure we get the image from the network
+  [[OGImageCache shared] purgeCache:YES];
+  
+  XCTestExpectation *expectation = [self expectationWithDescription:@"Got scaled image"];
+  
+  NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"aspect_fill@2x" ofType:@"png"];
+  UIImage *referenceImage = [[UIImage alloc] initWithContentsOfFile:path];
+  path = [[NSBundle bundleForClass:[self class]] pathForResource:@"left" ofType:@"jpg"];
+  CGSize toSize = CGSizeMake(80.f, 80.f);
+  
+  OGScaledImage *image = [[OGScaledImage alloc] initWithURL:[NSURL fileURLWithPath:path] size:toSize method:OGImageProcessingScale_AspectFill key:nil placeholderImage:nil];
+  NS_VALID_UNTIL_END_OF_SCOPE OGTestImageObserver *observer = [[OGTestImageObserver alloc] initWithImage:image andBlock:^(OGImage *img, NSString *keyPath) {
+    if ([keyPath isEqualToString:@"scaledImage"]) {
+      XCTAssertNotNil(img.image, @"Got success notification, but no image.");
+      if (nil != img.image) {
+        XCTAssertTrue(CGSizeEqualToSize(toSize, image.scaledImage.size), @"Expected image of size %@, got %@", NSStringFromCGSize(toSize), NSStringFromCGSize(image.scaledImage.size));
+        XCTAssertTrue(OGCompareImages(referenceImage.CGImage, image.scaledImage.CGImage), @"Images should compare the same");
+      }
+      [expectation fulfill];
+    }
+    else if ([keyPath isEqualToString:@"image"]) {
+      // should get this, before scaling
+    }
+    else {
+      XCTFail(@"Got unexpected KVO notification: %@", keyPath);
+      [expectation fulfill];
+    }
+  }];
+  
+  [self waitForExpectationsWithTimeout:2. handler:nil];
+  
+  // clean up the in-memory and disk cache when we're done
+  [[OGImageCache shared] purgeCache:YES];
+}
 
-// TODO: test coverage for rounded corners
+- (void)testCornerRoundingReturnsOriginalImageWithNoRadius {
+  NSURL *url = [[NSBundle bundleForClass:[self class]] URLForResource:@"reference" withExtension:@"png"];
+  __OGImage *image = [[__OGImage alloc] initWithDataAtURL:url];
+  
+  __OGImage *result = [[OGImageProcessing shared] applyCornerRadius:0 toImage:image];
+  XCTAssertEqual(image, result);
+}
+
+- (void)testCornerRounding {
+  NSURL *url = [[NSBundle bundleForClass:[self class]] URLForResource:@"corner_radius" withExtension:@"png"];
+  UIImage *referenceImage = [[UIImage alloc] initWithContentsOfFile:url.path];
+  
+  url = [[NSBundle bundleForClass:[self class]] URLForResource:@"reference" withExtension:@"png"];
+  __OGImage *image = [[__OGImage alloc] initWithDataAtURL:url];
+  
+  __OGImage *result = [[OGImageProcessing shared] applyCornerRadius:10 toImage:image];
+  XCTAssertNotNil(result, @"Should return an image");
+  XCTAssertNotEqual(image, result, @"Should return a new image");
+  XCTAssertTrue(CGSizeEqualToSize(image.size, result.size), @"Should maintain the same size");
+  XCTAssertEqual(image.scale, result.scale, @"Should maintain the same scale");
+  
+  // difference-based image compare doesn't work with alpha corners: blend onto a black background for comparison
+  UIGraphicsBeginImageContextWithOptions(result.size, YES, result.scale);
+  [[UIColor blackColor] setFill];
+  UIRectFill(CGRectMake(0, 0, result.size.width, result.size.height));
+  [result drawAtPoint:CGPointZero];
+  UIImage *test = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  XCTAssertTrue(OGCompareImages(referenceImage.CGImage, test.CGImage), @"Images should compare the same");
+}
 
 @end
 

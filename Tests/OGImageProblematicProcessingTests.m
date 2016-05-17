@@ -13,10 +13,10 @@
 #import "OGTestImageObserver.h"
 #import "NoOpAssertionHandler.h"
 
-extern OSStatus UIImageToVImageBuffer(UIImage *image, vImage_Buffer *buffer, CGImageAlphaInfo alphaInfo);
-
-//static NSString *KVOContext = @"OGImageProblematicProcessingTests observation";
 static const CGSize TEST_SCALE_SIZE = {100.f, 20.f};
+
+extern CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGPoint offset, CGImageAlphaInfo alphaInfo);
+
 
 @interface OGImageProblematicProcessingTests : XCTestCase
 
@@ -82,10 +82,8 @@ static const CGSize TEST_SCALE_SIZE = {100.f, 20.f};
   NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"moldex-logo" ofType:@"gif"];
   UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
   
-  vImage_Buffer vBuffer;
-  OSStatus result = UIImageToVImageBuffer(image, &vBuffer, kCGImageAlphaLast);
-  XCTAssertEqual(OGImageProcessingError, result, @"Operation should report failure");
-  XCTAssertEqual(NULL, vBuffer.data, @"Buffer should have NULL data pointer");
+  CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, image.size, CGPointZero, kCGImageAlphaLast);
+  XCTAssertEqual(NULL, cgImage, @"Image creation should fail");
 }
 
 - (void)testConvertingBadAlpha_First
@@ -93,10 +91,8 @@ static const CGSize TEST_SCALE_SIZE = {100.f, 20.f};
   NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"moldex-logo" ofType:@"gif"];
   UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
   
-  vImage_Buffer vBuffer;
-  OSStatus result = UIImageToVImageBuffer(image, &vBuffer, kCGImageAlphaFirst);
-  XCTAssertEqual(OGImageProcessingError, result, @"Operation should report failure");
-  XCTAssertEqual(NULL, vBuffer.data, @"Buffer should have NULL data pointer");
+  CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, image.size, CGPointZero, kCGImageAlphaFirst);
+  XCTAssertEqual(NULL, cgImage, @"Image creation should fail");
 }
 
 @end
