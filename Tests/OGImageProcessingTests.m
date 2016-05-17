@@ -56,6 +56,16 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
   XCTAssertThrows(OGAspectFit(CGSizeMake(0.f, 0.f), CGSizeMake(0.f, 0.f)), @"Expect OGAspectFit to throw when any dimension is zero.");
 }
 
+- (void)testAspectFit_6 {
+  CGSize newSize = OGAspectFit(CGSizeMake(100.f, 100.f), CGSizeMake(7.f, 13.f));
+  XCTAssertTrue(CGSizeEqualToSize(newSize, CGSizeMake(7.f, 7.f)), @"Invalid dimensions...");
+}
+
+- (void)testAspectFit_7 {
+  CGSize newSize = OGAspectFit(CGSizeMake(100.f, 100.f), CGSizeMake(7.8f, 13.f));
+  XCTAssertTrue(CGSizeEqualToSize(newSize, CGSizeMake(8.f, 8.f)), @"Invalid dimensions...");
+}
+
 - (void)testAspectFill_1 {
   CGPoint pt = CGPointZero;
   XCTAssertThrows(OGAspectFill(CGSizeMake(0.f, 0.f), CGSizeMake(0.f, 0.f), &pt), @"Expect OGAspectFill to throw when any dimension is zero.");

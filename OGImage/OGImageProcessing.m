@@ -24,9 +24,11 @@ CGSize OGAspectFit(CGSize from, CGSize to) {
     CGFloat r1 = from.width / from.height;
     CGFloat r2 = to.width / to.height;
     if (r2 > r1) {
-        return CGSizeMake(ceil(from.width * to.height/from.height), ceil(to.height));
+        CGFloat height = ceil(to.height);
+        return CGSizeMake(round(from.width * height / from.height), height);
     } else {
-        return CGSizeMake(ceil(to.width), ceil(from.height * (to.width / from.width)));
+        CGFloat width = ceil(to.width);
+        return CGSizeMake(width, round(from.height * width / from.width));
     }
 }
 
