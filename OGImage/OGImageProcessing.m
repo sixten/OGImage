@@ -11,9 +11,7 @@
 
 NSString * const OGImageProcessingErrorDomain = @"OGImageProcessingErrorDomain";
 
-/*
- * Return the size that aspect fits `from` into `to`
- */
+/// Return the size that aspect fits `from` into `to`.
 CGSize OGAspectFit(CGSize from, CGSize to) {
     NSCParameterAssert(0.f != from.width);
     NSCParameterAssert(0.f != from.height);
@@ -32,6 +30,7 @@ CGSize OGAspectFit(CGSize from, CGSize to) {
     }
 }
 
+/// Return the size at which `from` fills `to`.
 CGSize OGAspectFill(CGSize from, CGSize to, CGPoint *offset) {
     NSCParameterAssert(0.f != from.width);
     NSCParameterAssert(0.f != from.height);
@@ -45,56 +44,30 @@ CGSize OGAspectFill(CGSize from, CGSize to, CGPoint *offset) {
     CGFloat ratio = (dRatio <= sRatio) ? to.height / from.height : to.width / from.width;
     CGSize ret = CGSizeMake(round(from.width * ratio), round(from.height * ratio));
     if (ret.width > to.width) {
-        offset->x = floor(ret.width / 2.f - to.width / 2.f);
+        offset->x = floor((ret.width - to.width) / 2.f);
+        ret.width = to.width;
     }
     if (ret.height > to.height) {
-        offset->y = floor(ret.height / 2.f - to.height / 2.f);
+        offset->y = floor((ret.height - to.height) / 2.f);
+        ret.height = to.height;
     }
     return ret;
 }
 
-CGImageRef CreateCGImageFromUIImageAtSize(__unused UIImage *image, CGSize size, CGImageAlphaInfo alphaInfo) {
+CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGPoint offset, CGImageAlphaInfo alphaInfo) {
     CGImageRef cgImage = NULL;
     CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault | alphaInfo;
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef ctx = CGBitmapContextCreate(NULL, (size_t)size.width, (size_t)size.height, 8, 0, colorSpace, bitmapInfo);
     if( NULL != ctx ) {
-        switch( image.imageOrientation ) {
-            case UIImageOrientationUp:
-                // nothing to do: already right side up
-                break;
-            case UIImageOrientationUpMirrored:
-                CGContextScaleCTM(ctx, -1.f, 1.f);
-                CGContextTranslateCTM(ctx, -image.size.width, 0.f);
-                break;
-            case UIImageOrientationRight:
-                CGContextRotateCTM(ctx, -M_PI_2);
-                CGContextTranslateCTM(ctx, -image.size.height, 0.f);
-                break;
-            case UIImageOrientationRightMirrored:
-                CGContextRotateCTM(ctx, -M_PI_2);
-                CGContextScaleCTM(ctx, -1.f, 1.f);
-                break;
-            case UIImageOrientationLeft:
-                CGContextRotateCTM(ctx, M_PI_2);
-                CGContextTranslateCTM(ctx, 0.f, -image.size.width);
-                break;
-            case UIImageOrientationLeftMirrored:
-                CGContextScaleCTM(ctx, -1.f, 1.f);
-                CGContextRotateCTM(ctx, -M_PI_2);
-                CGContextTranslateCTM(ctx, -image.size.height, -image.size.width);
-                break;
-            case UIImageOrientationDown:
-                CGContextRotateCTM(ctx, M_PI);
-                CGContextTranslateCTM(ctx, -image.size.width, -image.size.height);
-                break;
-            case UIImageOrientationDownMirrored:
-                CGContextScaleCTM(ctx, 1.f, -1.f);
-                CGContextTranslateCTM(ctx, 0.f, -image.size.height);
-                break;
-        }
-        CGRect bounds = CGRectMake(0, 0, CGImageGetWidth(image.CGImage), CGImageGetHeight(image.CGImage));
-        CGContextDrawImage(ctx, bounds, image.CGImage);
+        CGContextScaleCTM(ctx, 1.f, -1.f);
+        CGContextTranslateCTM(ctx, 0.f, -size.height);
+        CGContextSetInterpolationQuality(ctx, kCGInterpolationHigh);
+        CGRect bounds = (CGRect){ .origin = CGPointZero, .size = size };
+        bounds = CGRectInset(bounds, -offset.x, -offset.y);
+        UIGraphicsPushContext(ctx);
+        [image drawInRect:bounds];
+        UIGraphicsPopContext();
         cgImage = CGBitmapContextCreateImage(ctx);
         CGContextRelease(ctx);
     }
@@ -185,8 +158,7 @@ CGImageRef CreateCGImageFromUIImageAtSize(__unused UIImage *image, CGSize size, 
                     alphaInfo = kCGImageAlphaPremultipliedFirst;
                 }
                 
-                // TODO: need to deal with the offset, either in or after this step
-                CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, targetSize, alphaInfo);
+                CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, targetSize, offset, alphaInfo);
                 if( nil != cgImage ) {
                     resultImage = [[__OGImage alloc] initWithCGImage:cgImage type:image.originalFileType info:image.originalFileProperties alphaInfo:alphaInfo scale:screenScale orientation:UIImageOrientationUp];
                     CGImageRelease(cgImage);

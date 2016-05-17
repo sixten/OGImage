@@ -15,7 +15,7 @@
 
 static const CGSize TEST_SCALE_SIZE = {100.f, 20.f};
 
-extern CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGImageAlphaInfo alphaInfo);
+extern CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGPoint offset, CGImageAlphaInfo alphaInfo);
 
 
 @interface OGImageProblematicProcessingTests : XCTestCase
@@ -82,7 +82,7 @@ extern CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CG
   NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"moldex-logo" ofType:@"gif"];
   UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
   
-  CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, image.size, kCGImageAlphaLast);
+  CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, image.size, CGPointZero, kCGImageAlphaLast);
   XCTAssertEqual(NULL, cgImage, @"Image creation should fail");
 }
 
@@ -91,7 +91,7 @@ extern CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CG
   NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"moldex-logo" ofType:@"gif"];
   UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
   
-  CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, image.size, kCGImageAlphaFirst);
+  CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, image.size, CGPointZero, kCGImageAlphaFirst);
   XCTAssertEqual(NULL, cgImage, @"Image creation should fail");
 }
 
