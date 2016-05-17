@@ -94,12 +94,39 @@ OSStatus UIImageToVImageBuffer(UIImage *image, vImage_Buffer *buffer, CGImageAlp
         buffer->data = NULL;
         err = OGImageProcessingError;
     } else {
-        if (UIImageOrientationRight == image.imageOrientation) {
-            CGContextRotateCTM(ctx, -M_PI/2.f);
-            CGContextTranslateCTM(ctx, -(CGFloat)height, 0.f);
-        } else if (UIImageOrientationLeft == image.imageOrientation) {
-            CGContextRotateCTM(ctx, M_PI/2.f);
-            CGContextTranslateCTM(ctx, 0.f, -(CGFloat)width);
+        switch( image.imageOrientation ) {
+            case UIImageOrientationUp:
+                // nothing to do: already right side up
+                break;
+            case UIImageOrientationUpMirrored:
+                CGContextScaleCTM(ctx, -1.f, 1.f);
+                CGContextTranslateCTM(ctx, -(CGFloat)width, 0.f);
+                break;
+            case UIImageOrientationRight:
+                CGContextRotateCTM(ctx, -M_PI_2);
+                CGContextTranslateCTM(ctx, -(CGFloat)height, 0.f);
+                break;
+            case UIImageOrientationRightMirrored:
+                CGContextRotateCTM(ctx, -M_PI_2);
+                CGContextScaleCTM(ctx, -1.f, 1.f);
+                break;
+            case UIImageOrientationLeft:
+                CGContextRotateCTM(ctx, M_PI_2);
+                CGContextTranslateCTM(ctx, 0.f, -(CGFloat)width);
+                break;
+            case UIImageOrientationLeftMirrored:
+                CGContextScaleCTM(ctx, -1.f, 1.f);
+                CGContextRotateCTM(ctx, -M_PI_2);
+                CGContextTranslateCTM(ctx, -(CGFloat)height, -(CGFloat)width);
+                break;
+            case UIImageOrientationDown:
+                CGContextRotateCTM(ctx, M_PI);
+                CGContextTranslateCTM(ctx, -(CGFloat)width, -(CGFloat)height);
+                break;
+            case UIImageOrientationDownMirrored:
+                CGContextScaleCTM(ctx, 1.f, -1.f);
+                CGContextTranslateCTM(ctx, 0.f, -(CGFloat)height);
+                break;
         }
         CGContextDrawImage(ctx, CGRectMake(0.f, 0.f, CGImageGetWidth(cgImage), CGImageGetHeight(cgImage)), cgImage);
         CGContextRelease(ctx);

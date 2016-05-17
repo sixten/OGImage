@@ -15,6 +15,9 @@ extern CGSize OGAspectFit(CGSize from, CGSize to);
 extern CGSize OGAspectFill(CGSize from, CGSize to, CGPoint *offset);
 
 extern OSStatus UIImageToVImageBuffer(UIImage *image, vImage_Buffer *buffer, CGImageAlphaInfo alphaInfo);
+extern CGImageRef VImageBufferToCGImage(vImage_Buffer *buffer, __unused CGFloat scale, CGImageAlphaInfo alphaInfo);
+
+static BOOL OGCompareImages(CGImageRef left, CGImageRef right);
 
 static NSString * const TEST_IMAGE_URL_STRING = @"http://easyquestion.net/thinkagain/wp-content/uploads/2009/05/james-bond.jpg";
 static const CGSize TEST_IMAGE_SIZE = {317.f, 400.f};
@@ -127,8 +130,97 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
   [[OGImageCache shared] purgeCache:YES];
 }
 
-// TODO: test coverage for other orientations (need to test image data, not just dimensions)
+- (void)testOrientationSupport {
+  NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"reference" ofType:@"png"];
+  UIImage *referenceImage = [[UIImage alloc] initWithContentsOfFile:path];
+  
+  path = [[NSBundle bundleForClass:[self class]] pathForResource:@"negative" ofType:@"jpg"];
+  UIImage *negativeImage = [[UIImage alloc] initWithContentsOfFile:path];
+  XCTAssertFalse(OGCompareImages(referenceImage.CGImage, negativeImage.CGImage), @"Images should NOT compare the same");
+  
+  NSArray *imageNames = @[ @"up", @"down", @"left", @"right", @"up_mirrored", @"down_mirrored", @"left_mirrored", @"right_mirrored", ];
+  for (NSString *imageName in imageNames) {
+    path = [[NSBundle bundleForClass:[self class]] pathForResource:imageName ofType:@"jpg"];
+    UIImage *testImage = [[UIImage alloc] initWithContentsOfFile:path];
+    XCTAssertTrue(CGSizeEqualToSize(CGSizeMake(120.f, 80.f), testImage.size), @"Image should be 120x80 px.");
+    
+    vImage_Buffer vBuffer;
+    OSStatus result = UIImageToVImageBuffer(testImage, &vBuffer, kCGImageAlphaNoneSkipLast);
+    XCTAssertEqual(noErr, result, @"Operation should succeed");
+    XCTAssertNotEqual(NULL, vBuffer.data, @"Buffer should have data pointer");
+    XCTAssertEqual(120, vBuffer.width, @"Buffer should be 120px wide");
+    XCTAssertEqual( 80, vBuffer.height, @"Buffer should be 80px tall");
+    
+    CGImageRef cgImage = VImageBufferToCGImage(&vBuffer, 1, kCGImageAlphaNoneSkipLast);
+    XCTAssertTrue(OGCompareImages(referenceImage.CGImage, cgImage), @"Images should compare the same");
+    CGImageRelease(cgImage);
+  }
+}
+
 
 // TODO: test coverage for rounded corners
 
 @end
+
+
+BOOL OGCompareImages(CGImageRef left, CGImageRef right) {
+  // First create the CIImage representations of the CGImage.
+  CIImage *ciImage1 = [CIImage imageWithCGImage:left];
+  CIImage *ciImage2 = [CIImage imageWithCGImage:right];
+  CGRect compareRect = CGRectMake(0.0, 0.0, CGImageGetWidth(left), CGImageGetHeight(left));
+  
+  // Create the difference blend mode filter and set its properties.
+  CIFilter *diffFilter = [CIFilter filterWithName:@"CIDifferenceBlendMode"];
+  [diffFilter setDefaults];
+  [diffFilter setValue:ciImage1 forKey:kCIInputImageKey];
+  [diffFilter setValue:ciImage2 forKey:kCIInputBackgroundImageKey];
+  
+  // render the difference, for diagnostic purposes
+  CGBitmapInfo bitmapInfo = (CGBitmapInfo)kCGImageAlphaPremultipliedLast;
+  bitmapInfo |= kCGBitmapByteOrderDefault;
+  CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+  CGContextRef diffCtx = CGBitmapContextCreateWithData(NULL, CGImageGetWidth(left), CGImageGetHeight(left), 8, 0, colorSpace, bitmapInfo, NULL, NULL);
+  CIContext *diffCICtx = [CIContext contextWithCGContext:diffCtx options:nil];
+  [diffCICtx drawImage:[diffFilter valueForKey:kCIOutputImageKey] inRect:compareRect fromRect:compareRect];
+  CGImageRef cgImage = CGBitmapContextCreateImage(diffCtx);
+  UIImage *diff = [UIImage imageWithCGImage:cgImage];
+  CGImageRelease(cgImage);
+  CGContextRelease(diffCtx);
+  (void)diff;
+  
+  // Create the area max filter and set its properties.
+  CIFilter *areaMaxFilter = [CIFilter filterWithName:@"CIAreaMaximum"];
+  [areaMaxFilter setDefaults];
+  [areaMaxFilter setValue:[diffFilter valueForKey:kCIOutputImageKey]
+                   forKey:kCIInputImageKey];
+  CIVector *extents = [CIVector vectorWithCGRect:compareRect];
+  [areaMaxFilter setValue:extents forKey:kCIInputExtentKey];
+  
+  // The filters have been setup, now set up the CGContext bitmap context the
+  // output is drawn to. Setup the context with our supplied buffer.
+  uint8_t buf[16];
+  memset(buf, 0, 16);
+  CGContextRef context = CGBitmapContextCreate(&buf, 1, 1, 8, 4, colorSpace, bitmapInfo);
+  
+  // Now create the core image context CIContext from the bitmap context.
+  NSDictionary *ciContextOpts = @{
+                                  kCIContextWorkingColorSpace : (__bridge id)colorSpace,
+                                  kCIContextUseSoftwareRenderer : @NO,
+                                  };
+  CIContext *ciContext = [CIContext contextWithCGContext:context options:ciContextOpts];
+  
+  // Get the output CIImage and draw that to the Core Image context.
+  CIImage *valueImage = [areaMaxFilter valueForKey:kCIOutputImageKey];
+  [ciContext drawImage:valueImage inRect: CGRectMake(0,0,1,1) fromRect: valueImage.extent];
+  
+  CGColorSpaceRelease(colorSpace);
+  CGContextRelease(context);
+  
+  // This will have modified the contents of the buffer used for the CGContext.
+  // Find the maximum value of the different color components. Remember that
+  // the CGContext was created with a Premultiplied last meaning that alpha
+  // is the fourth component with red, green and blue in the first three.
+  int maxVal = MAX(buf[0], MAX(buf[1], buf[2]));
+  
+  return maxVal < 64;
+}
