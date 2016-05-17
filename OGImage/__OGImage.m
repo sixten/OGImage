@@ -142,7 +142,7 @@ NSString *OGResolutionSuffixForScale(CGFloat scale) {
     CGImageDestinationRef imageDestination = CGImageDestinationCreateWithURL((__bridge CFURLRef)fileURL, (__bridge CFStringRef)imgType, 1, NULL);
     if (NULL == imageDestination) {
         if (nil != error) {
-            *error = [NSError errorWithDomain:NSCocoaErrorDomain code:-255 userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"[OGImageCache ERROR] failed to created image destination %s %d", __FILE__, __LINE__]}];
+            *error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileWriteUnknownError userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"[OGImageCache ERROR] failed to created image destination %s %d", __FILE__, __LINE__], NSURLErrorKey : fileURL}];
         }
         return NO;
     }
