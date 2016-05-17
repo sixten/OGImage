@@ -12,9 +12,8 @@
 
 #pragma mark - Constants
 
-const NSInteger OGImageLoadingError = -25555;
-
 NSString * const OGImageLoadingErrorDomain = @"OGImageLoadingErrorDomain";
+NSString * const OGImageLoadingHTTPStatusErrorKey = @"HTTPStatus";
 
 static OGImageLoader * OGImageLoaderInstance;
 

@@ -71,12 +71,12 @@
             tmpImage = [[__OGImage alloc] initWithData:_data];
             if (nil == tmpImage) {
                 // data isn't nil, but we couldn't create an image out of it...
-                tmpError = [NSError errorWithDomain:NSCocoaErrorDomain code:OGImageLoadingError userInfo:@{NSLocalizedDescriptionKey : @"OGImage: Received data from url, but couldn't create __OGImage instance"}];
+                tmpError = [NSError errorWithDomain:OGImageLoadingErrorDomain code:OGImageLoadingInvalidImageDataError userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"OGImage: Received %lu bytes of data from url, but couldn't create __OGImage instance", (unsigned long)_data.length], NSURLErrorFailingURLErrorKey : self.url}];
             }
         }
     } else {
         // if we get here, we have an http status code other than 200
-        tmpError = [NSError errorWithDomain:NSCocoaErrorDomain code:OGImageLoadingError userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"OGImage: Received http status code: %ld", (long)_httpResponse.statusCode]}];
+        tmpError = [NSError errorWithDomain:OGImageLoadingErrorDomain code:OGImageLoadingHTTPError userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"OGImage: Received http status code: %ld", (long)_httpResponse.statusCode], NSURLErrorFailingURLErrorKey : self.url, OGImageLoadingHTTPStatusErrorKey : @(_httpResponse.statusCode)}];
     }
     NSAssert((nil == tmpImage && nil != tmpError) || (nil != tmpImage && nil == tmpError), @"One of tmpImage or tmpError should be non-nil");
     dispatch_async(dispatch_get_main_queue(), ^{

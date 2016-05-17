@@ -27,7 +27,8 @@ static const CGSize TEST_IMAGE_SIZE = {317.f, 400.f};
   NS_VALID_UNTIL_END_OF_SCOPE OGTestImageObserver *observer = [[OGTestImageObserver alloc] initWithImage:image andBlock:^(__unused OGImage *img, NSString *keyPath) {
     XCTAssertTrue([NSThread isMainThread], @"Expected KVO notification to only be called on main thread");
     if ([keyPath isEqualToString:@"error"]) {
-      XCTAssertEqual(OGImageLoadingError, image.error.code, @"Expected loading error, got %@", image.error);
+      XCTAssertEqual(OGImageLoadingHTTPError, image.error.code, @"Expected HTTP error, got %@", image.error);
+      XCTAssertEqualObjects(@(404), image.error.userInfo[OGImageLoadingHTTPStatusErrorKey], @"Expected HTTP 404 response, got %@", image.error);
     }
     else {
       XCTFail(@"Didn't get error notification: %@", keyPath);

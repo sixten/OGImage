@@ -10,9 +10,15 @@
 
 @class OGImageLoader, __OGImage;
 
-extern const NSInteger OGImageLoadingError;
-
 extern NSString * const OGImageLoadingErrorDomain;
+
+extern NSString * const OGImageLoadingHTTPStatusErrorKey;
+
+enum {
+  OGImageLoadingError = -25555,
+  OGImageLoadingHTTPError = -31111,
+  OGImageLoadingInvalidImageDataError = -31222,
+};
 
 @protocol OGImageLoaderDelegate <NSObject>
 
