@@ -164,9 +164,8 @@ CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGPoint o
                     CGImageRelease(cgImage);
                 }
                 else {
-                    // TODO: error code
                     resultImage = nil;
-                    error = [NSError errorWithDomain:OGImageProcessingErrorDomain code:1 userInfo:@{ NSLocalizedDescriptionKey : @"Error converting UIImage to CGImage" }];
+                    error = [NSError errorWithDomain:OGImageProcessingErrorDomain code:OGImageProcessingError userInfo:@{ NSLocalizedDescriptionKey : @"Error converting UIImage to CGImage" }];
                 }
             }
           
