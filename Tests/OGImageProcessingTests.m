@@ -13,9 +13,7 @@
 
 extern CGSize OGAspectFit(CGSize from, CGSize to);
 extern CGSize OGAspectFill(CGSize from, CGSize to, CGPoint *offset);
-
-extern OSStatus UIImageToVImageBuffer(UIImage *image, vImage_Buffer *buffer, CGImageAlphaInfo alphaInfo);
-extern CGImageRef VImageBufferToCGImage(vImage_Buffer *buffer, __unused CGFloat scale, CGImageAlphaInfo alphaInfo);
+extern CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGImageAlphaInfo alphaInfo);
 
 static BOOL OGCompareImages(CGImageRef left, CGImageRef right);
 
@@ -76,12 +74,11 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
   XCTAssertTrue(CGSizeEqualToSize(CGSizeMake(200.f, 50.f), image.size), @"Image should be 200x50 px.");
   XCTAssertEqual(UIImageOrientationRight, image.imageOrientation, @"Image should be right-oriented.");
   
-  vImage_Buffer vBuffer;
-  OSStatus result = UIImageToVImageBuffer(image, &vBuffer, kCGImageAlphaNoneSkipLast);
-  XCTAssertEqual(noErr, result, @"Operation should succeed");
-  XCTAssertNotEqual(NULL, vBuffer.data, @"Buffer should have data pointer");
-  XCTAssertEqual(200, vBuffer.width, @"Buffer should be 200px wide");
-  XCTAssertEqual( 50, vBuffer.height, @"Buffer should be 50px tall");
+  CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, image.size, kCGImageAlphaNoneSkipLast);
+  XCTAssertNotEqual(NULL, cgImage, @"Image creation should succeed");
+  XCTAssertEqual(200, CGImageGetWidth(cgImage), @"Image should be 200px wide");
+  XCTAssertEqual( 50, CGImageGetHeight(cgImage), @"Image should be 50px tall");
+  CGImageRelease(cgImage);
 }
 
 - (void)testLeftOrientedImageGetsRotated
@@ -91,12 +88,11 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
   XCTAssertTrue(CGSizeEqualToSize(CGSizeMake(200.f, 50.f), image.size), @"Image should be 50x200 px.");
   XCTAssertEqual(UIImageOrientationLeft, image.imageOrientation, @"Image should be left-oriented.");
   
-  vImage_Buffer vBuffer;
-  OSStatus result = UIImageToVImageBuffer(image, &vBuffer, kCGImageAlphaNoneSkipLast);
-  XCTAssertEqual(noErr, result, @"Operation should succeed");
-  XCTAssertNotEqual(NULL, vBuffer.data, @"Buffer should have data pointer");
-  XCTAssertEqual(200, vBuffer.width, @"Buffer should be 200px wide");
-  XCTAssertEqual( 50, vBuffer.height, @"Buffer should be 50px tall");
+  CGImageRef cgImage = CreateCGImageFromUIImageAtSize(image, image.size, kCGImageAlphaNoneSkipLast);
+  XCTAssertNotEqual(NULL, cgImage, @"Image creation should succeed");
+  XCTAssertEqual(200, CGImageGetWidth(cgImage), @"Image should be 200px wide");
+  XCTAssertEqual( 50, CGImageGetHeight(cgImage), @"Image should be 50px tall");
+  CGImageRelease(cgImage);
 }
 
 - (void)testScaledImage1 {
@@ -144,14 +140,10 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
     UIImage *testImage = [[UIImage alloc] initWithContentsOfFile:path];
     XCTAssertTrue(CGSizeEqualToSize(CGSizeMake(120.f, 80.f), testImage.size), @"Image should be 120x80 px.");
     
-    vImage_Buffer vBuffer;
-    OSStatus result = UIImageToVImageBuffer(testImage, &vBuffer, kCGImageAlphaNoneSkipLast);
-    XCTAssertEqual(noErr, result, @"Operation should succeed");
-    XCTAssertNotEqual(NULL, vBuffer.data, @"Buffer should have data pointer");
-    XCTAssertEqual(120, vBuffer.width, @"Buffer should be 120px wide");
-    XCTAssertEqual( 80, vBuffer.height, @"Buffer should be 80px tall");
-    
-    CGImageRef cgImage = VImageBufferToCGImage(&vBuffer, 1, kCGImageAlphaNoneSkipLast);
+    CGImageRef cgImage = CreateCGImageFromUIImageAtSize(testImage, testImage.size, kCGImageAlphaNoneSkipLast);
+    XCTAssertNotEqual(NULL, cgImage, @"Image creation should succeed");
+    XCTAssertEqual(120, CGImageGetWidth(cgImage), @"Image should be 120px wide");
+    XCTAssertEqual( 80, CGImageGetHeight(cgImage), @"Image should be 80px tall");
     XCTAssertTrue(OGCompareImages(referenceImage.CGImage, cgImage), @"Images should compare the same");
     CGImageRelease(cgImage);
   }

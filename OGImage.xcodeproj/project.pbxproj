@@ -147,7 +147,7 @@
 		9C3F1C191C75779400174326 /* OGImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGImageLoader.h; sourceTree = "<group>"; };
 		9C3F1C1A1C75779400174326 /* OGImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageLoader.m; sourceTree = "<group>"; };
 		9C3F1C1B1C75779400174326 /* OGImageProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGImageProcessing.h; sourceTree = "<group>"; };
-		9C3F1C1C1C75779400174326 /* OGImageProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageProcessing.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		9C3F1C1C1C75779400174326 /* OGImageProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageProcessing.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9C3F1C1D1C75779400174326 /* OGImageRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGImageRequest.h; sourceTree = "<group>"; };
 		9C3F1C1E1C75779400174326 /* OGImageRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageRequest.m; sourceTree = "<group>"; };
 		9C3F1C1F1C75779400174326 /* OGImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGImageView.h; sourceTree = "<group>"; };
