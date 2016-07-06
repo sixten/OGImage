@@ -71,6 +71,7 @@
 		F6025F8A1CEA8D5700F67096 /* right.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F6025F811CEA8D5600F67096 /* right.jpg */; };
 		F6025F8B1CEA8D5700F67096 /* up_mirrored.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F6025F821CEA8D5600F67096 /* up_mirrored.jpg */; };
 		F6025F8C1CEA8D5700F67096 /* up.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F6025F831CEA8D5600F67096 /* up.jpg */; };
+		F60809B81D2DB1C000A03146 /* OGImageCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F60809B71D2DB1C000A03146 /* OGImageCacheTests.m */; };
 		F699818E1CEA958500263EE9 /* negative.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F699818D1CEA958500263EE9 /* negative.jpg */; };
 		F6FC6B241CEB835100CF03A3 /* corner_radius.png in Resources */ = {isa = PBXBuildFile; fileRef = F6FC6B231CEB835100CF03A3 /* corner_radius.png */; };
 /* End PBXBuildFile section */
@@ -146,7 +147,7 @@
 		9C3F1C151C75779400174326 /* OGImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGImage.h; sourceTree = "<group>"; };
 		9C3F1C161C75779400174326 /* OGImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGImage.m; sourceTree = "<group>"; };
 		9C3F1C171C75779400174326 /* OGImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGImageCache.h; sourceTree = "<group>"; };
-		9C3F1C181C75779400174326 /* OGImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageCache.m; sourceTree = "<group>"; };
+		9C3F1C181C75779400174326 /* OGImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageCache.m; sourceTree = "<group>"; };
 		9C3F1C191C75779400174326 /* OGImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGImageLoader.h; sourceTree = "<group>"; };
 		9C3F1C1A1C75779400174326 /* OGImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageLoader.m; sourceTree = "<group>"; };
 		9C3F1C1B1C75779400174326 /* OGImageProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGImageProcessing.h; sourceTree = "<group>"; };
@@ -185,6 +186,7 @@
 		F6025F811CEA8D5600F67096 /* right.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = right.jpg; sourceTree = "<group>"; };
 		F6025F821CEA8D5600F67096 /* up_mirrored.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = up_mirrored.jpg; sourceTree = "<group>"; };
 		F6025F831CEA8D5600F67096 /* up.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = up.jpg; sourceTree = "<group>"; };
+		F60809B71D2DB1C000A03146 /* OGImageCacheTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageCacheTests.m; sourceTree = "<group>"; };
 		F699818D1CEA958500263EE9 /* negative.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = negative.jpg; sourceTree = "<group>"; };
 		F6FC6B231CEB835100CF03A3 /* corner_radius.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = corner_radius.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -314,6 +316,7 @@
 				9C23339F1C78FF58001118A8 /* NoOpAssertionHandler.m */,
 				9C3F1C0A1C75773B00174326 /* Info.plist */,
 				9C2333911C78DF35001118A8 /* Resources */,
+				F60809B71D2DB1C000A03146 /* OGImageCacheTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -595,6 +598,7 @@
 				9C2333971C78E028001118A8 /* OGImageFileTests.m in Sources */,
 				9C23338F1C78DD8A001118A8 /* OGTestImageObserver.m in Sources */,
 				9C23339B1C78FDB7001118A8 /* OGImageScaleTests.m in Sources */,
+				F60809B81D2DB1C000A03146 /* OGImageCacheTests.m in Sources */,
 				9C23338D1C78DD8A001118A8 /* OGImageAssetsLibraryTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
