@@ -13,7 +13,7 @@
 #import "OGTestImageObserver.h"
 #import "NoOpAssertionHandler.h"
 
-static const CGSize TEST_SCALE_SIZE = {100.f, 20.f};
+static const CGSize TEST_SCALE_SIZE = {100.f, 19.f};
 
 extern CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGPoint offset, CGImageAlphaInfo alphaInfo);
 
@@ -36,27 +36,17 @@ extern CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CG
 
 - (void)testScalingGif
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"Got scaled image"];
   NSURL *url = [[NSBundle bundleForClass:[self class]] URLForResource:@"moldex-logo" withExtension:@"gif"];
   
   OGScaledImage *image = [[OGScaledImage alloc] initWithURL:url size:TEST_SCALE_SIZE key:nil];
-  NS_VALID_UNTIL_END_OF_SCOPE OGTestImageObserver *observer = [[OGTestImageObserver alloc] initWithImage:image andBlock:^(OGImage *img, NSString *keyPath) {
-    if ([keyPath isEqualToString:@"scaledImage"]) {
-      XCTAssertNotNil(img.image, @"Got success notification, but no image.");
-      if (nil != img.image) {
-        XCTAssertTrue(CGSizeEqualToSize(TEST_SCALE_SIZE, image.scaledImage.size), @"Expected image of size %@, got %@", NSStringFromCGSize(TEST_SCALE_SIZE), NSStringFromCGSize(image.image.size));
-      }
-      [expectation fulfill];
+  [self keyValueObservingExpectationForObject:image keyPath:@"scaledImage" handler:^BOOL(OGScaledImage *img, __unused NSDictionary *change){
+    XCTAssertNotNil(img.image, @"Got success notification, but no image.");
+    if (nil != img.scaledImage) {
+      XCTAssertTrue(CGSizeEqualToSize(TEST_SCALE_SIZE, image.scaledImage.size), @"Expected image of size %@, got %@", NSStringFromCGSize(TEST_SCALE_SIZE), NSStringFromCGSize(image.scaledImage.size));
     }
-    else if ([keyPath isEqualToString:@"image"]) {
-      // should get this, before scaling
-    }
-    else {
-      XCTFail(@"Got unexpected KVO notification: %@", keyPath);
-      [expectation fulfill];
-    }
+    return YES;
   }];
-  
+
   [self waitForExpectationsWithTimeout:5. handler:nil];
 }
 
