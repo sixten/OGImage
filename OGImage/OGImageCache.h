@@ -41,6 +41,11 @@ typedef void (^OGImageCacheCompletionBlock)(__OGImage * _Nullable image);
 - (void)setImage:(__OGImage * _Nullable)image forKey:(NSString * _Nullable)key;
 
 /**
+ * Adds an image to the in-memory cache with the specified `key`.
+ */
+- (void)setMemoryCacheImage:(__OGImage * _Nullable)image forKey:(NSString * _Nullable)key;
+
+/**
  * Remove all cached images from in-memory and on-disk caches. If `wait` is `YES`
  * this will block the calling thread until the purge is complete. In either case,
  * this method manages its own `UIBackgroundTaskIdentifier` — it's safe to call it

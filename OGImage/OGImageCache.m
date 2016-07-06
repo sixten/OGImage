@@ -119,7 +119,8 @@ static NSString *OGMD5(NSString *string) {
         return;
     }
     
-    [self.memoryCache setObject:image forKey:key];
+    [self setMemoryCacheImage:image forKey:key];
+    
     dispatch_async(self.cacheFileTasksQueue, ^{
         NSURL *fileURL = [self fileURLForKey:key];
         NSError *error;
@@ -131,6 +132,17 @@ static NSString *OGMD5(NSString *string) {
         // http://developer.apple.com/library/ios/#qa/qa1719/_index.html
         [fileURL setResourceValue:[NSNumber numberWithBool:YES] forKey: NSURLIsExcludedFromBackupKey error:nil];
     });
+}
+
+- (void)setMemoryCacheImage:(__OGImage * _Nullable)image forKey:(NSString * _Nullable)key {
+    // assert for developers, and guard against production crashes
+    NSParameterAssert(nil != image);
+    NSParameterAssert(nil != key);
+    if (nil == image || nil == key) {
+        return;
+    }
+    
+    [self.memoryCache setObject:image forKey:key];
 }
 
 - (void)purgeCache:(BOOL)wait {

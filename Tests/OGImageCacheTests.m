@@ -75,6 +75,29 @@
   [self waitForExpectationsWithTimeout:1.0 handler:nil];
 }
 
+- (void)testStoresContentInMemoryOnly {
+  NSURL *imageURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"Origami" withExtension:@"jpg"];
+  __OGImage *image = [[__OGImage alloc] initWithDataAtURL:imageURL];
+  NSURL *cacheURL = [self temporaryCacheDirectory:1];
+  OGImageCache *cache = [[OGImageCache alloc] initWithDirectoryURL:cacheURL];
+  
+  id expectation1 = [self expectationWithDescription:@"first fetch"];
+  [cache setMemoryCacheImage:image forKey:@"foo"];
+  [cache imageForKey:@"foo" block:^(__OGImage *foo){
+    XCTAssertNotNil(foo);
+    [expectation1 fulfill];
+  }];
+  
+  id expectation2 = [self expectationWithDescription:@"second fetch"];
+  [cache purgeMemoryCacheForKey:@"foo" andWait:YES];
+  [cache imageForKey:@"foo" block:^(__OGImage *foo){
+    XCTAssertNil(foo);
+    [expectation2 fulfill];
+  }];
+  
+  [self waitForExpectationsWithTimeout:0.5 handler:nil];
+}
+
 - (void)testPurgingContent {
   NSURL *imageURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"Origami" withExtension:@"jpg"];
   __OGImage *image = [[__OGImage alloc] initWithDataAtURL:imageURL];
