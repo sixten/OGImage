@@ -10,7 +10,6 @@
 @import XCTest;
 @import OGImage;
 #import "__OGImage.h"
-#import "OGTestImageObserver.h"
 #import "NoOpAssertionHandler.h"
 
 static const CGSize TEST_SCALE_SIZE = {100.f, 19.f};

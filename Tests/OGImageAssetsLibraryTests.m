@@ -9,7 +9,6 @@
 @import AssetsLibrary;
 @import XCTest;
 @import OGImage;
-#import "OGTestImageObserver.h"
 
 static CGSize const OGExpectedSize = {1024.f, 768.f};
 
@@ -38,32 +37,27 @@ static CGSize const OGExpectedSize = {1024.f, 768.f};
     self.assetURL = assetURL;
     [expectation fulfill];
   }];
-  [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:5. handler:^(NSError * _Nullable error) {
     NSLog(@"Could not copy test image to assets library: %@", error);
   }];
 }
 
 - (void)testAssetsLibrary {
-  XCTAssertNotNil(self.assetURL, @"Expect assetURL to be populated by setUp");
-  XCTestExpectation *expectation = [self expectationWithDescription:@"Got asset"];
-  
-  OGCachedImage *image = [[OGCachedImage alloc] initWithURL:_assetURL key:nil];
-  NS_VALID_UNTIL_END_OF_SCOPE OGTestImageObserver *observer = [[OGTestImageObserver alloc] initWithImage:image andBlock:^(OGImage *img, NSString *keyPath) {
-    if ([keyPath isEqualToString:@"image"]) {
-      XCTAssertNotNil(img.image, @"Got success notification, but no image.");
-      if (nil != img.image) {
-        XCTAssertTrue(CGSizeEqualToSize(OGExpectedSize, image.image.size), @"Expected image of size %@, got %@", NSStringFromCGSize(OGExpectedSize), NSStringFromCGSize(image.image.size));
-      }
-    }
-    else if ([keyPath isEqualToString:@"error"]) {
-      XCTFail(@"Got error loading image: %@", image.error);
-    }
-    [expectation fulfill];
-  }];
-  
-  [self waitForExpectationsWithTimeout:3. handler:^(NSError * _Nullable error) {
-    NSLog(@"Could not fetch test image from assets library: %@", error);
-  }];
+    XCTAssertNotNil(self.assetURL, @"Expect assetURL to be populated by setUp");
+    
+    OGCachedImage *image = [[OGCachedImage alloc] initWithURL:_assetURL key:nil];
+    [self keyValueObservingExpectationForObject:image keyPath:@"image" handler:^BOOL(OGImage * _Nonnull img, __unused NSDictionary * _Nonnull change) {
+        XCTAssertNil(img.error);
+        XCTAssertNotNil(img.image, @"Got success notification, but no image.");
+        XCTAssertNotNil(img.progress);
+        XCTAssertGreaterThanOrEqual(img.progress.fractionCompleted, 1.0);
+        XCTAssertTrue(CGSizeEqualToSize(OGExpectedSize, img.image.size), @"Expected image of size %@, got %@", NSStringFromCGSize(OGExpectedSize), NSStringFromCGSize(img.image.size));
+        return YES;
+    }];
+    
+    [self waitForExpectationsWithTimeout:3. handler:^(NSError * _Nullable error) {
+        NSLog(@"Could not fetch test image from assets library: %@", error);
+    }];
 }
 
 @end

@@ -27,4 +27,8 @@ enum {
 - (void)imageLoader:(OGImageLoader*)loader didLoadImage:(__OGImage *)image forURL:(NSURL *)url;
 - (void)imageLoader:(OGImageLoader*)loader failedForURL:(NSURL *)url error:(NSError *)error;
 
+@optional
+
+- (void)imageLoader:(OGImageLoader*)loader didBeginLoadingForURL:(NSURL *)url progress:(NSProgress *)progress;
+
 @end

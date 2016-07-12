@@ -42,6 +42,11 @@
 
 #pragma mark - OGImageLoaderDelegate
 
+- (void)imageLoader:(__unused OGImageLoader *)loader didBeginLoadingForURL:(NSURL *)url progress:(NSProgress *)progress {
+    NSParameterAssert([self.url isEqual:url]);
+    self.progress = progress;
+}
+
 - (void)imageLoader:(__unused OGImageLoader*)loader didLoadImage:(__OGImage *)image forURL:(NSURL *)url {
     NSParameterAssert([self.url isEqual:url]);
     if (nil != image) {

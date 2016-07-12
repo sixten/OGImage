@@ -92,16 +92,11 @@
 /**
  * Observe this property to be notified of image download progress.
  */
-@property (nonatomic, assign) float progress;
+@property (nonatomic, strong) NSProgress *progress;
 
 /**
  * The image's url (provided to init methods)
  */
 @property (nonatomic, strong) NSURL *url;
-
-/**
- * The amount of time it took to load the image from the network.
- */
-@property (nonatomic, assign) NSTimeInterval loadTime;
 
 @end

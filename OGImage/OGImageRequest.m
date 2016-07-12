@@ -10,12 +10,21 @@
 #import "__OGImage.h"
 #import <ImageIO/ImageIO.h>
 
+@interface OGImageRequest ()
+
+@property (nonatomic, assign, readwrite, getter=hasStarted) BOOL started;
+@property (nonatomic, strong, readwrite) NSURL *url;
+@property (nonatomic, strong, readwrite) NSProgress *progress;
+@property (nonatomic, strong, readwrite) NSError *error;
+
+@end
+
 @implementation OGImageRequest {
     NSDate *_startTime;
     OGImageLoaderCompletionBlock _completionBlock;
     NSOperationQueue *_delegateQueue;
     NSMutableData *_data;
-    long _contentLength;
+    long long _contentLength;
     NSHTTPURLResponse *_httpResponse;
 }
 
@@ -25,6 +34,13 @@
         self.url = imageURL;
         _delegateQueue = queue;
         _completionBlock = completionBlock;
+        _started = NO;
+        
+        NSProgress *progress = [NSProgress progressWithTotalUnitCount:0];
+        progress.kind = NSProgressKindFile;
+        [progress setUserInfoObject:NSProgressFileOperationKindDownloading
+                             forKey:NSProgressFileOperationKindKey];
+        self.progress = progress;
     }
     return self;
 }
@@ -35,12 +51,15 @@
     [conn setDelegateQueue:_delegateQueue];
     _startTime = [[NSDate alloc] init];
     [conn start];
+    self.started = YES;
 }
 
 #pragma mark - NSURLConnectionDelegate
 
 - (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
     self.error = error;
+    self.progress.totalUnitCount = 1;
+    self.progress.completedUnitCount = 1;
     dispatch_async(dispatch_get_main_queue(), ^{
         self->_completionBlock(nil, self.error, 0.);
     });
@@ -50,13 +69,21 @@
 
 - (void)connection:(__unused NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     _httpResponse = (NSHTTPURLResponse *)response;
-    _contentLength = [_httpResponse.allHeaderFields[@"Content-Length"] intValue];
-    _data = [NSMutableData dataWithCapacity:_contentLength];
+    if( NSURLResponseUnknownLength == _httpResponse.expectedContentLength ) {
+        _data = [NSMutableData data];
+    }
+    else {
+        _contentLength = _httpResponse.expectedContentLength;
+        _data = [NSMutableData dataWithCapacity:(NSUInteger)_contentLength];
+        _progress.totalUnitCount = _contentLength;
+    }
 }
 
 - (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
     [_data appendData:data];
-    self.progress = (float)_data.length / (float)_contentLength;
+    if( NSURLResponseUnknownLength != _httpResponse.expectedContentLength ) {
+        self.progress.completedUnitCount = _data.length;
+    }
 }
 
 - (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
@@ -79,6 +106,14 @@
         tmpError = [NSError errorWithDomain:OGImageLoadingErrorDomain code:OGImageLoadingHTTPError userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"OGImage: Received http status code: %ld", (long)_httpResponse.statusCode], NSURLErrorFailingURLErrorKey : self.url, OGImageLoadingHTTPStatusErrorKey : @(_httpResponse.statusCode)}];
     }
     NSAssert((nil == tmpImage && nil != tmpError) || (nil != tmpImage && nil == tmpError), @"One of tmpImage or tmpError should be non-nil");
+    
+    if( self.progress.totalUnitCount <= 0 ) {
+        self.progress.totalUnitCount = 1;
+    }
+    if( self.progress.completedUnitCount < self.progress.totalUnitCount ) {
+        self.progress.completedUnitCount = self.progress.totalUnitCount;
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         self->_completionBlock(tmpImage, tmpError, -[self->_startTime timeIntervalSinceNow]);
     });
