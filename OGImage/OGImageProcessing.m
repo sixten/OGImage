@@ -170,6 +170,11 @@ CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGPoint o
                     error = [NSError errorWithDomain:OGImageProcessingErrorDomain code:OGImageProcessingError userInfo:@{ NSLocalizedDescriptionKey : @"Error converting UIImage to CGImage" }];
                 }
             }
+            else if( image.scale != screenScale ) {
+                // correct number of pixels, but the wrong scale
+                CGImageRef cgImage = image.CGImage;
+                resultImage = [[__OGImage alloc] initWithCGImage:cgImage type:image.originalFileType info:image.originalFileProperties alphaInfo:image.alphaInfo scale:screenScale orientation:image.imageOrientation];
+            }
           
             // if rounded corners, apply
             if( 0.f < cornerRadius && nil != resultImage ) {
@@ -206,7 +211,7 @@ CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGPoint o
     }
     
     // keep the size & scale of the result image consistent with the original
-    CGSize _size = CGSizeMake(origImage.size.width * origImage.scale, origImage.size.height * origImage.scale);
+    CGRect _bounds = CGRectMake(0, 0, origImage.size.width * origImage.scale, origImage.size.height * origImage.scale);
     CGFloat _cornerRadius = cornerRadius * origImage.scale;
 
     // create a new bitmap context
@@ -214,21 +219,17 @@ CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CGPoint o
     CGImageAlphaInfo alphaInfo = kCGImageAlphaPremultipliedLast;
     CGBitmapInfo bitmapInfo = (CGBitmapInfo)alphaInfo;
     bitmapInfo |= CGImageGetBitmapInfo(origImage.CGImage) & kCGBitmapByteOrderMask;
-    CGContextRef context = CGBitmapContextCreate(NULL, (size_t)_size.width, (size_t)_size.height, 8, 0, colorSpace, bitmapInfo);
+    CGContextRef context = CGBitmapContextCreate(NULL, (size_t)_bounds.size.width, (size_t)_bounds.size.height, 8, 0, colorSpace, bitmapInfo);
     
     __OGImage *result = nil;
     if( NULL != context ) {
         // set a rounded-corner clipping path
-        UIBezierPath *roundRect = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, _size.width, _size.height) cornerRadius:_cornerRadius];
+        UIBezierPath *roundRect = [UIBezierPath bezierPathWithRoundedRect:_bounds cornerRadius:_cornerRadius];
         CGContextAddPath(context, roundRect.CGPath);
         CGContextClip(context);
 
         // draw the image into the new context
-        UIGraphicsPushContext(context);
-        CGContextScaleCTM(context, 1.f, -1.f);
-        CGContextTranslateCTM(context, 0.f, -_size.height);
-        [origImage drawAtPoint:CGPointZero];
-        UIGraphicsPopContext();
+        CGContextDrawImage(context, _bounds, origImage.CGImage);
 
         // create a new image from the result
         CGImageRef image = CGBitmapContextCreateImage(context);
