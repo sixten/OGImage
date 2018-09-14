@@ -6,7 +6,6 @@
 //  Copyright © 2016 Origami Labs. All rights reserved.
 //
 
-@import AssetsLibrary;
 @import XCTest;
 @import OGImage;
 #import "OGImageLoader.h"
@@ -46,37 +45,6 @@
     }];
     
     [[OGImageLoader shared] enqueueImageRequest:imageURL delegate:delegate];
-    
-    [self waitForExpectationsWithTimeout:0.2 handler:nil];
-}
-
-- (void)testLoaderBeginsProgressForAssetLibraryURLs {
-    // we have to save the test image to the asset library
-    NSURL *imageURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"Origami" withExtension:@"jpg"];
-    XCTAssertNotNil(imageURL, @"Couldn't get URL for test image");
-    
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    UIImage *image = [UIImage imageWithContentsOfFile:[imageURL path]];
-    XCTAssertNotNil(image, @"Couldn't load image from URL: %@", imageURL);
-    
-    __block NSURL *assetLibraryURL;
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Copied image"];
-    [library writeImageToSavedPhotosAlbum:image.CGImage metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
-        XCTAssertNil(error, @"Couldn't save test image to photos album: %@", error);
-        assetLibraryURL = assetURL;
-        [expectation fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:20. handler:nil];
-    
-    // now try to load that asset
-    OGProgressTestLoaderDelegate *delegate = [[OGProgressTestLoaderDelegate alloc] initWithURL:assetLibraryURL];
-    [self keyValueObservingExpectationForObject:delegate keyPath:@"progress" handler:^BOOL(__unused id _Nonnull observedObject, __unused NSDictionary * _Nonnull change) {
-        XCTAssertNotNil(delegate.progress);
-        XCTAssertTrue(delegate.progress.indeterminate);
-        return YES;
-    }];
-    
-    [[OGImageLoader shared] enqueueImageRequest:assetLibraryURL delegate:delegate];
     
     [self waitForExpectationsWithTimeout:0.2 handler:nil];
 }

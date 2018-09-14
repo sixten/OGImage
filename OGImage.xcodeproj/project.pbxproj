@@ -31,7 +31,6 @@
 		9C1CBAE11C78CD80004BA26E /* OGImageAll.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C1CBADF1C78CD80004BA26E /* OGImageAll.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9C1CBAE51C78CFB0004BA26E /* OGImageLoaderDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C1CBAE41C78CFB0004BA26E /* OGImageLoaderDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9C23338C1C78DD8A001118A8 /* moldex-logo.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9C2333861C78DD8A001118A8 /* moldex-logo.gif */; };
-		9C23338D1C78DD8A001118A8 /* OGImageAssetsLibraryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C2333871C78DD8A001118A8 /* OGImageAssetsLibraryTests.m */; };
 		9C23338E1C78DD8A001118A8 /* OGImageAsyncTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C2333881C78DD8A001118A8 /* OGImageAsyncTests.m */; };
 		9C23338F1C78DD8A001118A8 /* OGTestImageObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C23338A1C78DD8A001118A8 /* OGTestImageObserver.m */; };
 		9C2333901C78DD8A001118A8 /* Origami.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9C23338B1C78DD8A001118A8 /* Origami.jpg */; };
@@ -125,7 +124,6 @@
 		9C1CBAE41C78CFB0004BA26E /* OGImageLoaderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGImageLoaderDelegate.h; sourceTree = "<group>"; };
 		9C1CBAE61C78D31D004BA26E /* OGImage.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = OGImage.modulemap; sourceTree = "<group>"; };
 		9C2333861C78DD8A001118A8 /* moldex-logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "moldex-logo.gif"; sourceTree = "<group>"; };
-		9C2333871C78DD8A001118A8 /* OGImageAssetsLibraryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageAssetsLibraryTests.m; sourceTree = "<group>"; };
 		9C2333881C78DD8A001118A8 /* OGImageAsyncTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGImageAsyncTests.m; sourceTree = "<group>"; };
 		9C2333891C78DD8A001118A8 /* OGTestImageObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGTestImageObserver.h; sourceTree = "<group>"; };
 		9C23338A1C78DD8A001118A8 /* OGTestImageObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGTestImageObserver.m; sourceTree = "<group>"; };
@@ -173,7 +171,6 @@
 		9C3F1C4C1C757BCB00174326 /* OGViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OGViewController.m; sourceTree = "<group>"; };
 		9C3F1C511C757D4600174326 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		9C3F1C531C757D4D00174326 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		9C3F1C551C757D6200174326 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		9C3F1C561C757D6200174326 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		9C3F1C5A1C757DB200174326 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OGViewController.xib; sourceTree = "<group>"; };
 		9C3F1C5D1C757E3200174326 /* james_bond.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = james_bond.json; path = "Demo Data/james_bond.json"; sourceTree = "<group>"; };
@@ -308,7 +305,6 @@
 		9C3F1C071C75773B00174326 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				9C2333871C78DD8A001118A8 /* OGImageAssetsLibraryTests.m */,
 				9C2333881C78DD8A001118A8 /* OGImageAsyncTests.m */,
 				9C2333941C78E028001118A8 /* OGImageFileTests.m */,
 				F68B7FF41D3541F100334ED7 /* OGImageLoaderProgressTests.m */,
@@ -366,7 +362,6 @@
 		9C3F1C631C75822300174326 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9C3F1C551C757D6200174326 /* AssetsLibrary.framework */,
 				9C3F1C561C757D6200174326 /* ImageIO.framework */,
 				9C3F1C531C757D4D00174326 /* CoreGraphics.framework */,
 				9C3F1C511C757D4600174326 /* Accelerate.framework */,
@@ -608,7 +603,6 @@
 				F68B7FF51D3541F100334ED7 /* OGImageLoaderProgressTests.m in Sources */,
 				9C23339B1C78FDB7001118A8 /* OGImageScaleTests.m in Sources */,
 				F60809B81D2DB1C000A03146 /* OGImageCacheTests.m in Sources */,
-				9C23338D1C78DD8A001118A8 /* OGImageAssetsLibraryTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

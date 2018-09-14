@@ -9,7 +9,7 @@
 #import "OGTestImageObserver.h"
 #import "OGImage.h"
 
-static NSString *KVOContext = @"OGImageAssetsLibraryTests observation";
+static NSString *KVOContext = @"OGTestImageObserver observation";
 
 @interface OGTestImageObserver ()
 

@@ -77,10 +77,10 @@ in the previously requested URL and the current URL is given first priority for 
 To use OGImage in your projects, simply add the files in the `OGImage`
 subdirectory to your target.
 
-You'll need to add `AssetsLibrary.framework` and `ImageIO.framework` to your
+You'll need to add `ImageIO.framework` to your
 target's "Link Binary With Libraries" build phase. If you're using
 `OGScaledImage` and/or `OGImageProcessing`, you'll additionally need to add
-`Accelerate.framework` and `AssetsLibrary.framework` to your target's "Link
+`Accelerate.framework` to your target's "Link
 Binary With Libraries" build phase.
 
 ## Usage

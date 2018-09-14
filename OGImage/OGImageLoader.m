@@ -8,7 +8,6 @@
 #import "OGImageLoader.h"
 #import "OGImageRequest.h"
 #import "__OGImage.h"
-#import <AssetsLibrary/AssetsLibrary.h>
 
 #pragma mark - Constants
 
@@ -30,7 +29,7 @@ static OGImageLoader * OGImageLoaderInstance;
     NSInteger _inFlightRequestCount;
     // We use this timer to periodically check _requestSerializationQueue for requests to fire off
     dispatch_source_t _timer;
-    // A queue solely for file-loading work (e.g., when we get a `file:` or `assets-library:` URL)
+    // A queue solely for file-loading work (e.g., when we get a `file:` URL)
     dispatch_queue_t _fileWorkQueue;
     // key -> url, value -> NSArray of id<OGImageLoaderDelegate>
     // we use this to track multiple interested parties on a single url
@@ -120,16 +119,10 @@ static OGImageLoader * OGImageLoaderInstance;
      * available network request.
      *
      */
-    // if this is a file:// or assets-library:// URL, don't bother with a OGImageRequest
+    // if this is a file:// URL, don't bother with a OGImageRequest
     if ([[imageURL scheme] isEqualToString:@"file"]) {
         dispatch_async(_fileWorkQueue, ^{
             [self loadFileForURL:imageURL delegate:delegate];
-        });
-        return;
-    }
-    else if ([[imageURL scheme] isEqualToString:@"assets-library"]) {
-        dispatch_async(_fileWorkQueue, ^{
-            [self loadAssetForURL:imageURL delegate:delegate];
         });
         return;
     }
@@ -244,51 +237,6 @@ static OGImageLoader * OGImageLoaderInstance;
             [delegate imageLoader:self didLoadImage:image forURL:imageURL];
         }
     });
-}
-
-- (void)loadAssetForURL:(NSURL *)imageURL delegate:(id<OGImageLoaderDelegate>)delegate {
-    NSProgress *progress = [NSProgress progressWithTotalUnitCount:0];
-    progress.kind = NSProgressKindFile;
-    [progress setUserInfoObject:NSProgressFileOperationKindDecompressingAfterDownloading
-                         forKey:NSProgressFileOperationKindKey];
-    if( [delegate respondsToSelector:@selector(imageLoader:didBeginLoadingForURL:progress:)] ) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegate imageLoader:self didBeginLoadingForURL:imageURL progress:progress];
-        });
-    }
-    
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    [library assetForURL:imageURL resultBlock:^(ALAsset *asset) {
-        ALAssetRepresentation *jpg = [asset representationForUTI:@"public.jpeg"];
-        CGImageRef jpgImage = jpg.fullResolutionImage;
-        CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(jpgImage);
-        __OGImage *image = [[__OGImage alloc] initWithCGImage:jpg.fullResolutionImage type:@"public.jpeg" info:jpg.metadata alphaInfo:alphaInfo scale:jpg.scale orientation:(UIImageOrientation)jpg.orientation];
-        NSError *error = nil;
-        if (nil == image) {
-            error = [NSError errorWithDomain:OGImageLoadingErrorDomain
-                                        code:OGImageLoadingError
-                                    userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:NSLocalizedString(@"Couldn't load image from asset URL:%@", @""), imageURL]}];
-        }
-        
-        progress.totalUnitCount = 1;
-        progress.completedUnitCount = 1;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (nil == image) {
-                [delegate imageLoader:self failedForURL:imageURL error:error];
-            } else {
-                [delegate imageLoader:self didLoadImage:image forURL:imageURL];
-            }
-        });
-    } failureBlock:^(NSError *origError) {
-        NSError *error = [NSError errorWithDomain:OGImageLoadingErrorDomain
-                                             code:OGImageLoadingError
-                                         userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:NSLocalizedString(@"Couldn't load image from asset URL:%@", @""), imageURL],
-                                                    NSUnderlyingErrorKey : origError}];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegate imageLoader:self failedForURL:imageURL error:error];
-        });
-        
-    }];
 }
 
 @end
