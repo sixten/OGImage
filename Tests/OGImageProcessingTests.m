@@ -18,8 +18,8 @@ extern CGImageRef CreateCGImageFromUIImageAtSize(UIImage *image, CGSize size, CG
 
 static BOOL OGCompareImages(CGImageRef left, CGImageRef right);
 
-static NSString * const TEST_IMAGE_URL_STRING = @"http://easyquestion.net/thinkagain/wp-content/uploads/2009/05/james-bond.jpg";
-static const CGSize TEST_IMAGE_SIZE = {317.f, 400.f};
+static NSString * const TEST_IMAGE_URL_STRING = @"https://httpbin.org/image/jpeg";
+static const CGSize TEST_IMAGE_SIZE = {239.f, 178.f};
 static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
 
 @interface OGImageProcessing (Privates)

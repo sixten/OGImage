@@ -9,9 +9,9 @@
 @import XCTest;
 @import OGImage;
 
-static NSString * const TEST_IMAGE_URL_STRING = @"http://easyquestion.net/thinkagain/wp-content/uploads/2009/05/james-bond.jpg";
-static NSString * const FAKE_IMAGE_URL_STRING = @"http://easyquestion.net/thinkagain/wp-content/uploads/2009/05/james00.jpg";
-static const CGSize TEST_IMAGE_SIZE = {317.f, 400.f};
+static NSString * const TEST_IMAGE_URL_STRING = @"https://httpbin.org/image/jpeg";
+static NSString * const FAKE_IMAGE_URL_STRING = @"https://httpbin.org/status/404";
+static const CGSize TEST_IMAGE_SIZE = {239.f, 178.f};
 
 @interface OGImageAsyncTests : XCTestCase
 

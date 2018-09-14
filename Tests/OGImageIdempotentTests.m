@@ -10,7 +10,7 @@
 @import OGImage;
 #import "OGTestImageObserver.h"
 
-static NSString * const TEST_IMAGE_URL_STRING = @"http://easyquestion.net/thinkagain/wp-content/uploads/2009/05/james-bond.jpg";
+static NSString * const TEST_IMAGE_URL_STRING = @"https://httpbin.org/image/jpeg";
 
 @interface OGImageIdempotentTests : XCTestCase
 
