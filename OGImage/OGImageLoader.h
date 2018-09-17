@@ -8,6 +8,8 @@
 @import UIKit;
 #import "OGImageLoaderDelegate.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, OGImageLoaderPriority) {
     OGImageLoaderPriority_Low,
     OGImageLoaderPriority_Default,
@@ -18,7 +20,7 @@ typedef NS_ENUM(NSInteger, OGImageLoaderPriority) {
  * This block is called when an image is loaded or fails to load. If `error` is
  * nil, `image` should be valid.
  */
-typedef void(^OGImageLoaderCompletionBlock)(__OGImage *image, NSError *error, NSTimeInterval loadTime);
+typedef void(^OGImageLoaderCompletionBlock)(__OGImage * _Nullable image, NSError * _Nullable error, NSTimeInterval loadTime);
 
 @interface OGImageLoader : NSObject
 
@@ -44,4 +46,11 @@ typedef void(^OGImageLoaderCompletionBlock)(__OGImage *image, NSError *error, NS
  */
 @property (nonatomic, assign) OGImageLoaderPriority priority;
 
+/**
+ * A custom string to use as the User-Agent header for HTTP requests.
+ */
+@property (nonatomic, copy, nullable) NSString *userAgent;
+
 @end
+
+NS_ASSUME_NONNULL_END

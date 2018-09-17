@@ -19,8 +19,10 @@ static OGImageLoader * OGImageLoaderInstance;
 #pragma mark -
 
 @implementation OGImageLoader {
-    // The queue on which our `NSURLConnection` completion block is executed.
-    NSOperationQueue *_imageCompletionQueue;
+    NSURLSession *_urlSession;
+    
+    // The queue on which our OGImageRequest completion blocks are executed.
+    dispatch_queue_t _imageCompletionQueue;
     // A LIFO queue of _OGImageLoaderInfo instances
     NSMutableArray *_requests;
     // Serializes access to the the request queue
@@ -55,9 +57,12 @@ static OGImageLoader * OGImageLoaderInstance;
         _requestsSerializationQueue = dispatch_queue_create("com.origamilabs.requestSerializationQueue", DISPATCH_QUEUE_SERIAL);
         self.priority = OGImageLoaderPriority_Low;
         
-        _imageCompletionQueue = [[NSOperationQueue alloc] init];
-        // make our network completion calls serial so there's no thrashing.
-        _imageCompletionQueue.maxConcurrentOperationCount = 1;
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        // TODO: any additional customization
+        _urlSession = [NSURLSession sessionWithConfiguration:configuration];
+        // FIXME: _urlSession.delegate = self;
+        
+        _imageCompletionQueue = dispatch_queue_create("com.origamilabs.imageCompletionQueue", DISPATCH_QUEUE_SERIAL);
         _fileWorkQueue = dispatch_queue_create("com.origamilabs.fileWorkQueue", DISPATCH_QUEUE_CONCURRENT);
         _loaderDelegates = [NSMutableDictionary dictionaryWithCapacity:64];
         _requestLookup = [NSMutableDictionary dictionaryWithCapacity:128];
@@ -89,6 +94,12 @@ static OGImageLoader * OGImageLoaderInstance;
         newPriority = DISPATCH_QUEUE_PRIORITY_DEFAULT;
     }
     dispatch_set_target_queue(_requestsSerializationQueue, dispatch_get_global_queue(newPriority, 0));
+}
+
+- (void)setUserAgent:(NSString *)userAgent
+{
+    _userAgent = [userAgent copy];
+    [_urlSession.configuration.HTTPAdditionalHeaders setValue:userAgent forKey:@"User-Agent"];
 }
 
 - (void)enqueueImageRequest:(NSURL *)imageURL delegate:(id<OGImageLoaderDelegate>)delegate {
@@ -144,7 +155,11 @@ static OGImageLoader * OGImageLoaderInstance;
             // and if the request has already started, notify the delegate of the progress
             if( request.hasStarted && [delegate respondsToSelector:@selector(imageLoader:didBeginLoadingForURL:progress:)] ) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [delegate imageLoader:self didBeginLoadingForURL:imageURL progress:request.progress];
+                    NSProgress *progress = nil;
+                    if (@available(iOS 11, *)) {
+                        progress = request.progress;
+                    }
+                    [delegate imageLoader:self didBeginLoadingForURL:imageURL progress:progress];
                 });
             }
             
@@ -154,28 +169,30 @@ static OGImageLoader * OGImageLoaderInstance;
         // we don't have a request out for this url, so create it...
         request = [[OGImageRequest alloc] initWithURL:imageURL
                                       completionBlock:^(__OGImage *image, NSError *error, __unused double timeElapsed){
-            if (self->_inFlightRequestCount > 0) {
-                self->_inFlightRequestCount--;
-            }
-            // when the request is complete, notify all interested delegates
-            __block NSMutableArray *listeners = nil;
-            dispatch_sync(self->_requestsSerializationQueue, ^{
-                // we need to ensure serial access to the delegate array
-                listeners = self->_loaderDelegates[key];
-                [self->_loaderDelegates removeObjectForKey:key];
-                [self->_requestLookup removeObjectForKey:key];
-            });
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // call back all the delegates on the main queue
-                for (id<OGImageLoaderDelegate> loaderDelegate in listeners) {
-                    if (nil == image) {
-                        [loaderDelegate imageLoader:self failedForURL:imageURL error:error];
-                    } else {
-                        [loaderDelegate imageLoader:self didLoadImage:image forURL:imageURL];
-                    }
+            dispatch_async(self->_imageCompletionQueue, ^{
+                if (self->_inFlightRequestCount > 0) {
+                    self->_inFlightRequestCount--;
                 }
+                // when the request is complete, notify all interested delegates
+                __block NSMutableArray *listeners = nil;
+                dispatch_sync(self->_requestsSerializationQueue, ^{
+                    // we need to ensure serial access to the delegate array
+                    listeners = self->_loaderDelegates[key];
+                    [self->_loaderDelegates removeObjectForKey:key];
+                    [self->_requestLookup removeObjectForKey:key];
+                });
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // call back all the delegates on the main queue
+                    for (id<OGImageLoaderDelegate> loaderDelegate in listeners) {
+                        if (nil == image) {
+                            [loaderDelegate imageLoader:self failedForURL:imageURL error:error];
+                        } else {
+                            [loaderDelegate imageLoader:self didLoadImage:image forURL:imageURL];
+                        }
+                    }
+                });
             });
-        } queue:self->_imageCompletionQueue];
+        }];
         
         // ... enqueue it ...
         [self->_requests addObject:request];
@@ -195,14 +212,18 @@ static OGImageLoader * OGImageLoaderInstance;
     if (self.maxConcurrentNetworkRequests > _inFlightRequestCount && 0 < [_requests count]) {
         OGImageRequest *request = [_requests lastObject];
         [_requests removeLastObject];
-        [request retrieveImage];
+        [request retrieveImageInSession:_urlSession];
         _inFlightRequestCount++;
         
         NSArray *listeners = [NSArray arrayWithArray:self->_loaderDelegates[[request.url absoluteString]]];
         dispatch_async(dispatch_get_main_queue(), ^{
             for (id<OGImageLoaderDelegate> loaderDelegate in listeners) {
                 if( [loaderDelegate respondsToSelector:@selector(imageLoader:didBeginLoadingForURL:progress:)] ) {
-                    [loaderDelegate imageLoader:self didBeginLoadingForURL:request.url progress:request.progress];
+                    NSProgress *progress = nil;
+                    if (@available(iOS 11, *)) {
+                        progress = request.progress;
+                    }
+                    [loaderDelegate imageLoader:self didBeginLoadingForURL:request.url progress:progress];
                 }
             }
         });

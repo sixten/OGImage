@@ -8,91 +8,129 @@
 
 @import XCTest;
 @import OGImage;
+#import "__OGImage.h"
 #import "OGImageRequest.h"
 
+typedef void (^OG_TaskCompletion)(NSData * _Nullable, NSURLResponse * _Nullable, NSError * _Nullable);
+
 @interface OGImageRequestTests : XCTestCase
+@end
+
+@interface OG_MockSession : NSURLSession
+
+@property (nonatomic, copy) OG_TaskCompletion completion;
 
 @end
 
-@implementation OGImageRequestTests
+@interface OG_MockTask : NSObject
 
-- (void)testRequestReportsIndeterminateProgress {
-    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"Origami" ofType:@"jpg"];
-    NSData *imageData = [[NSData alloc] initWithContentsOfFile:path];
-    XCTAssertNotNil(imageData);
-    
-    NSURL *url = [NSURL URLWithString:@"http://example.com/image"];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:nil startImmediately:NO];
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    
-    OGImageRequest *imageRequest = [[OGImageRequest alloc] initWithURL:url completionBlock:^(__unused __OGImage *image, __unused NSError *error, __unused NSTimeInterval loadTime) {
-        // no-op
-    } queue:queue];
-    
-    // initially indeterminate
-    XCTAssertNotNil(imageRequest.progress);
-    XCTAssertTrue(imageRequest.progress.isIndeterminate);
-    
-    // still indeterminate after the response, because unknown content length
-    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url MIMEType:@"image/jpeg" expectedContentLength:NSURLResponseUnknownLength textEncodingName:nil];
-    [imageRequest connection:conn didReceiveResponse:response];
-    XCTAssertNotNil(imageRequest.progress);
-    XCTAssertTrue(imageRequest.progress.isIndeterminate);
-    XCTAssertEqualWithAccuracy(imageRequest.progress.fractionCompleted, 0, 0.001);
-    
-    // and still indeterminte after receiving some data
-    NSRange chunkRange = NSMakeRange(0, (NSUInteger)floor(imageData.length * 0.4));
-    NSData *firstChunk = [imageData subdataWithRange:chunkRange];
-    [imageRequest connection:conn didReceiveData:firstChunk];
-    XCTAssertNotNil(imageRequest.progress);
-    XCTAssertTrue(imageRequest.progress.isIndeterminate);
-    XCTAssertEqualWithAccuracy(imageRequest.progress.fractionCompleted, 0, 0.001);
+@property (nonatomic, copy) NSURL *url;
+
+@end
+
+@implementation OG_MockSession
+
+- (NSURLSessionDataTask *)dataTaskWithURL:(NSURL *)url completionHandler:(void (^)(NSData * _Nullable, NSURLResponse * _Nullable, NSError * _Nullable))completionHandler
+{
+    OG_MockTask *task = [[OG_MockTask alloc] init];
+    task.url = url;
+    self.completion = completionHandler;
+    return (id)task;
 }
 
-- (void)testRequestReportsDefiniteProgress {
+@end
+
+@implementation OG_MockTask
+
+- (void)resume {}
+
+@end
+
+
+@implementation OGImageRequestTests
+
+- (void)testRequestCompletionPassesThroughErrors {
+    NSURL *url = [NSURL URLWithString:@"http://example.com/image"];
+    OG_MockSession *session = [[OG_MockSession alloc] init];
+    
+    __block NSError *reportedError = nil;
+    OGImageRequest *imageRequest = [[OGImageRequest alloc] initWithURL:url completionBlock:^(__unused __OGImage *image, __unused NSError *error, __unused NSTimeInterval loadTime) {
+        XCTAssertNil(image);
+        reportedError = error;
+    }];
+    [imageRequest retrieveImageInSession:session];
+    
+    NSError *dispatchedError = [NSError errorWithDomain:@"OGBondErrorDomain" code:007 userInfo:nil];
+    session.completion(nil, nil, dispatchedError);
+    XCTAssertEqual(dispatchedError, reportedError);
+}
+
+- (void)testRequestCompletionReturnsErrorForUnsuccessfulRequest {
+    NSURL *url = [NSURL URLWithString:@"http://example.com/image"];
+    OG_MockSession *session = [[OG_MockSession alloc] init];
+    
+    __block NSError *reportedError = nil;
+    OGImageRequest *imageRequest = [[OGImageRequest alloc] initWithURL:url completionBlock:^(__unused __OGImage *image, __unused NSError *error, __unused NSTimeInterval loadTime) {
+        XCTAssertNil(image);
+        reportedError = error;
+    }];
+    [imageRequest retrieveImageInSession:session];
+    
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:400 HTTPVersion:nil headerFields:nil];
+    session.completion(nil, response, nil);
+    
+    XCTAssertNotNil(reportedError);
+    XCTAssertNotNil(reportedError.userInfo);
+    XCTAssertEqualObjects(OGImageLoadingErrorDomain, reportedError.domain);
+    XCTAssertEqual(OGImageLoadingHTTPError, reportedError.code);
+    XCTAssertEqualObjects(url, reportedError.userInfo[NSURLErrorFailingURLErrorKey]);
+    XCTAssertEqualObjects(@400, reportedError.userInfo[OGImageLoadingHTTPStatusErrorKey]);
+}
+
+- (void)testRequestCompletionReturnsErrorForInvalidImageData {
+    NSData *imageData = [[NSData alloc] initWithBase64EncodedString:@"Tm93IGlzIHRoZSB0aW1lIGZvciBhbGwgZ29vZCBtZW7igKY=" options:0];
+    XCTAssertNotNil(imageData);
+    
+    NSURL *url = [NSURL URLWithString:@"http://example.com/image"];
+    OG_MockSession *session = [[OG_MockSession alloc] init];
+    
+    __block NSError *reportedError = nil;
+    OGImageRequest *imageRequest = [[OGImageRequest alloc] initWithURL:url completionBlock:^(__unused __OGImage *image, __unused NSError *error, __unused NSTimeInterval loadTime) {
+        XCTAssertNil(image);
+        reportedError = error;
+    }];
+    [imageRequest retrieveImageInSession:session];
+    
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:nil headerFields:nil];
+    session.completion(imageData, response, nil);
+    
+    XCTAssertNotNil(reportedError);
+    XCTAssertNotNil(reportedError.userInfo);
+    XCTAssertEqualObjects(OGImageLoadingErrorDomain, reportedError.domain);
+    XCTAssertEqual(OGImageLoadingInvalidImageDataError, reportedError.code);
+    XCTAssertEqualObjects(url, reportedError.userInfo[NSURLErrorFailingURLErrorKey]);
+}
+
+- (void)testRequestCompletionReturnsImageFromRequestData {
     NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"Origami" ofType:@"jpg"];
     NSData *imageData = [[NSData alloc] initWithContentsOfFile:path];
     XCTAssertNotNil(imageData);
     
     NSURL *url = [NSURL URLWithString:@"http://example.com/image"];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:nil startImmediately:NO];
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    OG_MockSession *session = [[OG_MockSession alloc] init];
     
+    __block __OGImage *reportedImage = nil;
     OGImageRequest *imageRequest = [[OGImageRequest alloc] initWithURL:url completionBlock:^(__unused __OGImage *image, __unused NSError *error, __unused NSTimeInterval loadTime) {
-        // no-op
-    } queue:queue];
+        XCTAssertNil(error);
+        reportedImage = image;
+    }];
+    [imageRequest retrieveImageInSession:session];
     
-    // initially indeterminate
-    XCTAssertNotNil(imageRequest.progress);
-    XCTAssertTrue(imageRequest.progress.isIndeterminate);
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:nil headerFields:nil];
+    session.completion(imageData, response, nil);
     
-    // definite after the response, because known content length
-    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url MIMEType:@"image/jpeg" expectedContentLength:imageData.length textEncodingName:nil];
-    [imageRequest connection:conn didReceiveResponse:response];
-    XCTAssertNotNil(imageRequest.progress);
-    XCTAssertFalse(imageRequest.progress.isIndeterminate);
-    XCTAssertEqual(imageRequest.progress.totalUnitCount, imageData.length);
-    XCTAssertEqual(imageRequest.progress.completedUnitCount, 0);
-    XCTAssertEqualWithAccuracy(imageRequest.progress.fractionCompleted, 0, 0.001);
-    
-    // updates progress as data comes in
-    NSRange chunkRange = NSMakeRange(0, 0);
-    for (int step=0; step < 10; ++step) {
-        double fraction = (step + 1) / 10.0;
-        NSUInteger start = NSMaxRange(chunkRange);
-        NSUInteger end = (NSUInteger)floor(imageData.length * fraction);
-        chunkRange = NSMakeRange(start, end - start);
-        NSData *chunk = [imageData subdataWithRange:chunkRange];
-        
-        [imageRequest connection:conn didReceiveData:chunk];
-        XCTAssertNotNil(imageRequest.progress);
-        XCTAssertFalse(imageRequest.progress.isIndeterminate);
-        XCTAssertEqual(imageRequest.progress.totalUnitCount, imageData.length);
-        XCTAssertEqual(imageRequest.progress.completedUnitCount, end);
-        XCTAssertEqualWithAccuracy(imageRequest.progress.fractionCompleted, fraction, 0.05);
-    }
+    XCTAssertNotNil(reportedImage);
+    XCTAssertEqual(1024.f, reportedImage.size.width);
 }
 
 @end

@@ -12,13 +12,13 @@
 /// Encapsulates the details of loading an image from a specific URL.
 /// The image requests are managed by `OGImageLoader`, and are an implementation
 /// detail of the overall system.
-@interface OGImageRequest : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate, NSProgressReporting>
+@interface OGImageRequest : NSObject <NSProgressReporting>
 
-- (id)initWithURL:(NSURL *)imageURL completionBlock:(OGImageLoaderCompletionBlock)completionBlock queue:(NSOperationQueue *)queue;
+- (id)initWithURL:(NSURL *)imageURL completionBlock:(OGImageLoaderCompletionBlock)completionBlock;
 
 /// Instructs the receiver to initiate the network operation to retrieve the image.
 /// Has no effect if the request has already been started.
-- (void)retrieveImage;
+- (void)retrieveImageInSession:(NSURLSession *)session;
 
 /// `YES` if the receiver has received a `retrieveImage` message.
 @property (nonatomic, assign, readonly, getter=hasStarted) BOOL started;
@@ -27,10 +27,8 @@
 @property (nonatomic, strong, readonly) NSURL *url;
 
 /// @abstract The current progress of the download operation.
-/// @description Will be indeterminate from the point the receiver is created
-///   until the initial response is received. If that response has a Content-Length
-///   header, the progress will then report the number of bytes received.
-@property (nonatomic, strong, readonly) NSProgress *progress;
+/// @description Undefined until and unless this request has been started.
+@property (nonatomic, strong, readonly) NSProgress *progress __attribute__((availability(ios,introduced=11)));
 
 /// If the image request fails, details of the nature of that failure.
 @property (nonatomic, strong, readonly) NSError *error;

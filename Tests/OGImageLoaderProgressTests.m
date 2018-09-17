@@ -55,7 +55,6 @@
     OGProgressTestLoaderDelegate *delegate = [[OGProgressTestLoaderDelegate alloc] initWithURL:imageURL];
     [self keyValueObservingExpectationForObject:delegate keyPath:@"progress" handler:^BOOL(__unused id _Nonnull observedObject, __unused NSDictionary * _Nonnull change) {
         XCTAssertNotNil(delegate.progress);
-        XCTAssertTrue(delegate.progress.indeterminate);
         return YES;
     }];
     
@@ -70,7 +69,6 @@
     OGProgressTestLoaderDelegate *delegate = [[OGProgressTestLoaderDelegate alloc] initWithURL:imageURL];
     [self keyValueObservingExpectationForObject:delegate keyPath:@"progress" handler:^BOOL(__unused id _Nonnull observedObject, __unused NSDictionary * _Nonnull change) {
         XCTAssertNotNil(delegate.progress);
-        XCTAssertTrue(delegate.progress.indeterminate);
         return YES;
     }];
     

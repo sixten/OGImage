@@ -118,10 +118,10 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
 }
 
 - (void)testScaledImage1 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"Got scaled image"];
-  
   // make sure we get the image from the network
   [[OGImageCache shared] purgeCache:YES];
+  
+  XCTestExpectation *expectation = [self expectationWithDescription:@"Got scaled image"];
   
   OGScaledImage *image = [[OGScaledImage alloc] initWithURL:[NSURL URLWithString:TEST_IMAGE_URL_STRING] size:TEST_SCALE_SIZE key:nil];
   NS_VALID_UNTIL_END_OF_SCOPE OGTestImageObserver *observer = [[OGTestImageObserver alloc] initWithImage:image andBlock:^(OGImage *img, NSString *keyPath) {
@@ -142,7 +142,7 @@ static const CGSize TEST_SCALE_SIZE = {128.f, 128.f};
     }
   }];
   
-  [self waitForExpectationsWithTimeout:5. handler:nil];
+  [self waitForExpectationsWithTimeout:10. handler:nil];
   
   // clean up the in-memory and disk cache when we're done
   [[OGImageCache shared] purgeCache:YES];
