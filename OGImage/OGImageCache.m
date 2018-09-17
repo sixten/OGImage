@@ -5,11 +5,11 @@
 //  Copyright (c) 2012 Origami Labs, Inc.. All rights reserved.
 //
 
+@import CommonCrypto;
+@import ImageIO;
 #import "OGImageCache.h"
 #import "OGImage.h"
 #import "__OGImage.h"
-#import <CommonCrypto/CommonDigest.h>
-#import <ImageIO/ImageIO.h>
 
 static OGImageCache *OGImageCacheShared;
 

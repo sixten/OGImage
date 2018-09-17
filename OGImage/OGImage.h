@@ -5,7 +5,7 @@
 //  Copyright (c) 2012 Origami Labs, Inc.. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 #import "OGImageLoaderDelegate.h"
 
 @interface OGImage : NSObject <OGImageLoaderDelegate>

@@ -7,7 +7,7 @@
 //  Copyright (c) 2013 Origami Labs. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 /**
  * Note the underscores in the name of this class: It's intended for internal use only.

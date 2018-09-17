@@ -6,8 +6,9 @@
 //  Copyright (c) 2012 Origami Labs, Inc.. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "OGImageView.h"
+@import UIKit;
+
+@class OGImageView;
 
 @interface OGImageTableViewCell : UITableViewCell
 

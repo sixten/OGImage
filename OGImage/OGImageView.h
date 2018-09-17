@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Origami Labs. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 @interface OGImageView : UIImageView
 

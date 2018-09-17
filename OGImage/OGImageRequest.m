@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Origami Labs. All rights reserved.
 //
 
+@import ImageIO;
 #import "OGImageRequest.h"
 #import "__OGImage.h"
-#import <ImageIO/ImageIO.h>
 
 @interface OGImageRequest ()
 

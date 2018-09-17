@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Origami Labs. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 #import "OGImageLoader.h"
 
 /// Encapsulates the details of loading an image from a specific URL.

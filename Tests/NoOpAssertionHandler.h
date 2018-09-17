@@ -6,7 +6,7 @@
 //  Copyright © 2016 Origami Labs. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 @interface NoOpAssertionHandler : NSAssertionHandler
 

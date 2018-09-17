@@ -6,7 +6,8 @@
 //  Copyright © 2016 Origami Labs. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+
 #import "OGAppDelegate.h"
 
 int main(int argc, char * argv[]) {

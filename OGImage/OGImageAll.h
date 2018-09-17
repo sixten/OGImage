@@ -6,7 +6,7 @@
 //  Copyright © 2016 Origami Labs. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 //! Project version number for OGImage.
 FOUNDATION_EXPORT double OGImageVersionNumber;

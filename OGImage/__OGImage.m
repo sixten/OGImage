@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Origami Labs. All rights reserved.
 //
 
+@import ImageIO;
 #import "__OGImage.h"
-#import <ImageIO/ImageIO.h>
 
 NSString * const OGImageInfoKey = @"OGImageInfoKey";
 NSString * const OGImageInfoScaleKey = @"OGImageInfoScaleKey";

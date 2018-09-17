@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Origami Labs, Inc.. All rights reserved.
 //
 
+@import OGImage;
 #import "OGAppDelegate.h"
 #import "OGViewController.h"
-#import "OGImageCache.h"
 
 @implementation OGAppDelegate
 

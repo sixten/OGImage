@@ -5,9 +5,9 @@
 //  Copyright (c) 2012 Origami Labs, Inc.. All rights reserved.
 //
 
+#import <tgmath.h>
 #import "OGImageProcessing.h"
 #import "__OGImage.h"
-#import <tgmath.h>
 
 NSString * const OGImageProcessingErrorDomain = @"OGImageProcessingErrorDomain";
 
