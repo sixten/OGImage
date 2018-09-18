@@ -18,13 +18,19 @@ NSString * const OGImageLoadingHTTPResponseErrorKey = @"HTTPResponse";
 
 static OGImageLoader * OGImageLoaderInstance;
 
-#pragma mark -
+@interface OGImageLoader () <NSURLSessionDelegate>
 
+/// The currently active URL session.
+@property (nonatomic, strong) NSURLSession *urlSession;
+
+/// Any previously active URL sessions that are waiting to finish.
+@property (nonatomic, strong) NSMutableSet *inactiveURLSessions;
+
+@end
+
+
+#pragma mark -
 @implementation OGImageLoader {
-    NSURLSession *_urlSession;
-    
-    // The queue on which our OGImageRequest completion blocks are executed.
-    dispatch_queue_t _imageCompletionQueue;
     // A LIFO queue of _OGImageLoaderInfo instances
     NSMutableArray *_requests;
     // Serializes access to the the request queue
@@ -59,12 +65,10 @@ static OGImageLoader * OGImageLoaderInstance;
         _requestsSerializationQueue = dispatch_queue_create("com.origamilabs.requestSerializationQueue", DISPATCH_QUEUE_SERIAL);
         self.priority = OGImageLoaderPriority_Low;
         
+        _inactiveURLSessions = [NSMutableSet set];
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        // TODO: any additional customization
-        _urlSession = [NSURLSession sessionWithConfiguration:configuration];
-        // FIXME: _urlSession.delegate = self;
+        [self replaceURLSessionWithConfiguration:configuration];
         
-        _imageCompletionQueue = dispatch_queue_create("com.origamilabs.imageCompletionQueue", DISPATCH_QUEUE_SERIAL);
         _fileWorkQueue = dispatch_queue_create("com.origamilabs.fileWorkQueue", DISPATCH_QUEUE_CONCURRENT);
         _loaderDelegates = [NSMutableDictionary dictionaryWithCapacity:64];
         _requestLookup = [NSMutableDictionary dictionaryWithCapacity:128];
@@ -101,7 +105,16 @@ static OGImageLoader * OGImageLoaderInstance;
 - (void)setUserAgent:(NSString *)userAgent
 {
     _userAgent = [userAgent copy];
-    [_urlSession.configuration.HTTPAdditionalHeaders setValue:userAgent forKey:@"User-Agent"];
+    NSURLSessionConfiguration *config = [self.urlSession.configuration copy];
+    if( nil != config.HTTPAdditionalHeaders ) {
+        NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithDictionary:config.HTTPAdditionalHeaders];
+        [headers setValue:_userAgent forKey:@"User-Agent"];
+        config.HTTPAdditionalHeaders = headers;
+    }
+    else {
+        config.HTTPAdditionalHeaders = @{ @"User-Agent" : _userAgent };
+    }
+    [self replaceURLSessionWithConfiguration:config];
 }
 
 - (void)enqueueImageRequest:(NSURL *)imageURL delegate:(id<OGImageLoaderDelegate>)delegate {
@@ -171,28 +184,26 @@ static OGImageLoader * OGImageLoaderInstance;
         // we don't have a request out for this url, so create it...
         request = [[OGImageRequest alloc] initWithURL:imageURL
                                       completionBlock:^(__OGImage *image, NSError *error, __unused double timeElapsed){
-            dispatch_async(self->_imageCompletionQueue, ^{
-                if (self->_inFlightRequestCount > 0) {
-                    self->_inFlightRequestCount--;
-                }
-                // when the request is complete, notify all interested delegates
-                __block NSMutableArray *listeners = nil;
-                dispatch_sync(self->_requestsSerializationQueue, ^{
-                    // we need to ensure serial access to the delegate array
-                    listeners = self->_loaderDelegates[key];
-                    [self->_loaderDelegates removeObjectForKey:key];
-                    [self->_requestLookup removeObjectForKey:key];
-                });
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // call back all the delegates on the main queue
-                    for (id<OGImageLoaderDelegate> loaderDelegate in listeners) {
-                        if (nil == image) {
-                            [loaderDelegate imageLoader:self failedForURL:imageURL error:error];
-                        } else {
-                            [loaderDelegate imageLoader:self didLoadImage:image forURL:imageURL];
-                        }
+            if (self->_inFlightRequestCount > 0) {
+                self->_inFlightRequestCount--;
+            }
+            // when the request is complete, notify all interested delegates
+            __block NSMutableArray *listeners = nil;
+            dispatch_sync(self->_requestsSerializationQueue, ^{
+                // we need to ensure serial access to the delegate array
+                listeners = self->_loaderDelegates[key];
+                [self->_loaderDelegates removeObjectForKey:key];
+                [self->_requestLookup removeObjectForKey:key];
+            });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // call back all the delegates on the main queue
+                for (id<OGImageLoaderDelegate> loaderDelegate in listeners) {
+                    if (nil == image) {
+                        [loaderDelegate imageLoader:self failedForURL:imageURL error:error];
+                    } else {
+                        [loaderDelegate imageLoader:self didLoadImage:image forURL:imageURL];
                     }
-                });
+                }
             });
         }];
         
@@ -208,7 +219,29 @@ static OGImageLoader * OGImageLoaderInstance;
 }
 
 
+#pragma mark - NSURLSessionDelegate
+
+- (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(__unused NSError *)error {
+    if( [self.inactiveURLSessions containsObject:session] ) {
+        [self.inactiveURLSessions removeObject:session];
+    }
+}
+
+
 #pragma mark - Private
+
+- (void)replaceURLSessionWithConfiguration:(NSURLSessionConfiguration *)configuration {
+    NSURLSession *oldSession = _urlSession;
+    if( nil != oldSession ) {
+        [oldSession finishTasksAndInvalidate];
+        oldSession.sessionDescription = @"OGImageLoader session (inactive)";
+        [self.inactiveURLSessions addObject:oldSession];
+    }
+    
+    NSURLSession *newSession = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    newSession.sessionDescription = @"OGImageLoader session";
+    self.urlSession = newSession;
+}
 
 - (void)checkForWork {
     if (self.maxConcurrentNetworkRequests > _inFlightRequestCount && 0 < [_requests count]) {

@@ -77,6 +77,30 @@
     [self waitForExpectationsWithTimeout:0.2 handler:nil];
 }
 
+- (void)testLoaderSetsCustomUserAgent {
+    NSURL *url = [NSURL URLWithString:@"https://httpbin.org/user-agent"];
+    OGImageLoader *loader = [[OGImageLoader alloc] init];
+    
+    loader.userAgent = @"Nonsense-Agent/610.007.123 foo/97 bar/33";
+
+    OGTestLoaderDelegate *delegate = [[OGTestLoaderDelegate alloc] initWithURL:url];
+    [self keyValueObservingExpectationForObject:delegate keyPath:@"error" handler:^BOOL(__unused id _Nonnull observedObject, __unused NSDictionary * _Nonnull change) {
+        NSError *error = change[NSKeyValueChangeNewKey];
+        XCTAssertEqualObjects(OGImageLoadingErrorDomain, error.domain);
+        XCTAssertEqual(OGImageLoadingInvalidImageDataError, error.code);
+        XCTAssertNotNil(error.userInfo[OGImageLoadingDataErrorKey]);
+        
+        NSDictionary *info = [NSJSONSerialization JSONObjectWithData:error.userInfo[OGImageLoadingDataErrorKey] options:0 error:NULL];
+        XCTAssertEqualObjects(info[@"user-agent"], loader.userAgent);
+        
+        return YES;
+    }];
+    
+    [loader enqueueImageRequest:url delegate:delegate];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+}
+
 @end
 
 
