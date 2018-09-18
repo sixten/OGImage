@@ -1,5 +1,5 @@
 //
-//  OGImageLoaderProgressTests.m
+//  OGImageLoaderTests.m
 //  OGImage
 //
 //  Created by Sixten Otto on 7/12/16.
@@ -10,7 +10,7 @@
 @import OGImage;
 #import "OGImageLoader.h"
 
-@interface OGProgressTestLoaderDelegate : NSObject <OGImageLoaderDelegate>
+@interface OGTestLoaderDelegate : NSObject <OGImageLoaderDelegate>
 
 @property (copy, nonatomic) NSURL *url;
 @property (strong, nonatomic) NSProgress *progress;
@@ -22,22 +22,17 @@
 
 @end
 
-@interface OGImageLoaderProgressTests : XCTestCase
+@interface OGImageLoaderTests : XCTestCase
 
 @end
 
-@implementation OGImageLoaderProgressTests
-
-- (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
+@implementation OGImageLoaderTests
 
 - (void)testLoaderBeginsProgressForFileURLs {
     NSURL *imageURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"Origami" withExtension:@"jpg"];
     XCTAssertNotNil(imageURL, @"Couldn't get URL for test image");
     
-    OGProgressTestLoaderDelegate *delegate = [[OGProgressTestLoaderDelegate alloc] initWithURL:imageURL];
+    OGTestLoaderDelegate *delegate = [[OGTestLoaderDelegate alloc] initWithURL:imageURL];
     [self keyValueObservingExpectationForObject:delegate keyPath:@"progress" handler:^BOOL(__unused id _Nonnull observedObject, __unused NSDictionary * _Nonnull change) {
         XCTAssertNotNil(delegate.progress);
         XCTAssertTrue(delegate.progress.indeterminate);
@@ -52,7 +47,7 @@
 - (void)testLoaderBeginsProgressForNetworkRequests {
     NSURL *imageURL = [NSURL URLWithString:@"http://placehold.it/50x50"];
     
-    OGProgressTestLoaderDelegate *delegate = [[OGProgressTestLoaderDelegate alloc] initWithURL:imageURL];
+    OGTestLoaderDelegate *delegate = [[OGTestLoaderDelegate alloc] initWithURL:imageURL];
     [self keyValueObservingExpectationForObject:delegate keyPath:@"progress" handler:^BOOL(__unused id _Nonnull observedObject, __unused NSDictionary * _Nonnull change) {
         XCTAssertNotNil(delegate.progress);
         return YES;
@@ -66,14 +61,14 @@
 - (void)testLoaderBeginsProgressForSubsequentRequests {
     NSURL *imageURL = [NSURL URLWithString:@"http://placehold.it/50x50"];
     
-    OGProgressTestLoaderDelegate *delegate = [[OGProgressTestLoaderDelegate alloc] initWithURL:imageURL];
+    OGTestLoaderDelegate *delegate = [[OGTestLoaderDelegate alloc] initWithURL:imageURL];
     [self keyValueObservingExpectationForObject:delegate keyPath:@"progress" handler:^BOOL(__unused id _Nonnull observedObject, __unused NSDictionary * _Nonnull change) {
         XCTAssertNotNil(delegate.progress);
         return YES;
     }];
     
     // first call to get the URL into the stack; no expectations on this delegate
-    OGProgressTestLoaderDelegate *delegate1 = [[OGProgressTestLoaderDelegate alloc] initWithURL:imageURL];
+    OGTestLoaderDelegate *delegate1 = [[OGTestLoaderDelegate alloc] initWithURL:imageURL];
     [[OGImageLoader shared] enqueueImageRequest:imageURL delegate:delegate1];
     
     // second call should re-use the existing request on the stack
@@ -85,7 +80,7 @@
 @end
 
 
-@implementation OGProgressTestLoaderDelegate
+@implementation OGTestLoaderDelegate
 
 - (instancetype)initWithURL:(NSURL *)url
 {
