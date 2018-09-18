@@ -54,11 +54,11 @@
                 tmpImage = [[__OGImage alloc] initWithData:data];
                 if (nil == tmpImage) {
                     // data isn't nil, but we couldn't create an image out of it...
-                    tmpError = [NSError errorWithDomain:OGImageLoadingErrorDomain code:OGImageLoadingInvalidImageDataError userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"OGImage: Received %lu bytes of data from url, but couldn't create __OGImage instance", (unsigned long)data.length], NSURLErrorFailingURLErrorKey : strongSelf.url}];
+                    tmpError = [NSError errorWithDomain:OGImageLoadingErrorDomain code:OGImageLoadingInvalidImageDataError userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"OGImage: Received %lu bytes of data from url, but couldn't create __OGImage instance", (unsigned long)data.length], NSURLErrorFailingURLErrorKey : strongSelf.url, OGImageLoadingDataErrorKey : data}];
                 }
             }
             else {
-                tmpError = [NSError errorWithDomain:OGImageLoadingErrorDomain code:OGImageLoadingHTTPError userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"OGImage: Received http status code: %ld", (long)httpResponse.statusCode], NSURLErrorFailingURLErrorKey : strongSelf.url, OGImageLoadingHTTPStatusErrorKey : @(httpResponse.statusCode)}];
+                tmpError = [NSError errorWithDomain:OGImageLoadingErrorDomain code:OGImageLoadingHTTPError userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"OGImage: Received http status code: %ld", (long)httpResponse.statusCode], NSURLErrorFailingURLErrorKey : strongSelf.url, OGImageLoadingHTTPStatusErrorKey : @(httpResponse.statusCode), OGImageLoadingHTTPResponseErrorKey : httpResponse}];
             }
         }
         else if( nil != data ) {

@@ -12,7 +12,9 @@
 #pragma mark - Constants
 
 NSString * const OGImageLoadingErrorDomain = @"OGImageLoadingErrorDomain";
+NSString * const OGImageLoadingDataErrorKey = @"ImageData";
 NSString * const OGImageLoadingHTTPStatusErrorKey = @"HTTPStatus";
+NSString * const OGImageLoadingHTTPResponseErrorKey = @"HTTPResponse";
 
 static OGImageLoader * OGImageLoaderInstance;
 

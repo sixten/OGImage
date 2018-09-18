@@ -12,7 +12,9 @@
 
 extern NSString * const OGImageLoadingErrorDomain;
 
+extern NSString * const OGImageLoadingDataErrorKey;
 extern NSString * const OGImageLoadingHTTPStatusErrorKey;
+extern NSString * const OGImageLoadingHTTPResponseErrorKey;
 
 enum {
   OGImageLoadingError = -25555,
